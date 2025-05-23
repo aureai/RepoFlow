@@ -16,10 +16,10 @@ import { useToast } from '@/hooks/use-toast';
 export interface StepContent {
   id: string;
   title: string;
-  instructions: string[];
+  instructions: React.ReactNode[]; // Allow ReactNode for more complex instructions like images
   commands?: string[];
   Icon?: LucideIcon;
-  alerts?: { type: 'warning' | 'info' | 'note'; title?: string; message: string }[];
+  alerts?: { type: 'warning' | 'info' | 'note'; title?: string; message: string | React.ReactNode }[];
 }
 
 interface WalkthroughStepProps {
@@ -55,48 +55,54 @@ export function WalkthroughStep({ step, isCompleted, isOpen, onToggleComplete, s
     });
   };
 
-  const renderInstruction = (instruction: string) => {
+  const renderInstructionPart = (part: string | React.ReactNode, partKey: string | number): React.ReactNode => {
+    if (typeof part !== 'string') {
+      return part; // It's already a ReactNode (e.g., an Image component or JSX)
+    }
+
+    // Process string parts for inline code and links
     const keywordMap: Record<string, {url: string; displayText: string}> = {
       'github': { url: 'https://github.com', displayText: 'GitHub' },
-      'github.com': { url: 'https://github.com', displayText: 'GitHub' },
+      'github.com': { url: 'https://github.com', displayText: 'GitHub.com' },
       'vercel': { url: 'https://vercel.com', displayText: 'Vercel' },
-      'vercel.com': { url: 'https://vercel.com', displayText: 'Vercel' },
+      'vercel.com': { url: 'https://vercel.com', displayText: 'Vercel.com' },
     };
 
     const escapedKeywords = Object.keys(keywordMap).map(k => k.replace('.', '\\.'));
     const keywordRegex = new RegExp(`\\b(${escapedKeywords.join('|')})\\b`, 'gi');
+    
+    const segments = part.split(/(`[^`]+`)/g); // Split by inline code blocks
 
-    const parts = instruction.split(/(`[^`]+`)/g); 
-
-    return parts.map((part, partIndex) => {
-      if (partIndex % 2 === 1) { 
+    return segments.map((segment, segmentIndex) => {
+      if (segmentIndex % 2 === 1) { // This is an inline code block
         return (
           <code
-            key={`code-${step.id}-${partIndex}`}
+            key={`code-${step.id}-${partKey}-${segmentIndex}`}
             className="bg-muted px-1.5 py-0.5 rounded-sm font-mono text-sm text-accent shadow-sm border border-border/70"
           >
-            {part.slice(1, -1)}
+            {segment.slice(1, -1)}
           </code>
         );
       }
 
-      const textSegments: React.ReactNode[] = [];
+      // This is a regular text segment, check for keywords to linkify
+      const textNodes: React.ReactNode[] = [];
       let lastIndex = 0;
       let match;
       
-      const localKeywordRegex = new RegExp(keywordRegex); 
-      while ((match = localKeywordRegex.exec(part)) !== null) {
+      const localKeywordRegex = new RegExp(keywordRegex); // Create a new RegExp instance for each iteration
+      while ((match = localKeywordRegex.exec(segment)) !== null) {
         const matchedKeyword = match[0].toLowerCase();
         const keywordConfig = keywordMap[matchedKeyword];
 
         if (match.index > lastIndex) {
-          textSegments.push(part.substring(lastIndex, match.index));
+          textNodes.push(segment.substring(lastIndex, match.index));
         }
 
         if (keywordConfig) {
-          textSegments.push(
+          textNodes.push(
             <a
-              key={`link-${step.id}-${partIndex}-${match.index}`}
+              key={`link-${step.id}-${partKey}-${segmentIndex}-${match.index}`}
               href={keywordConfig.url}
               target="_blank"
               rel="noopener noreferrer"
@@ -106,22 +112,23 @@ export function WalkthroughStep({ step, isCompleted, isOpen, onToggleComplete, s
             </a>
           );
         } else {
-          textSegments.push(match[0]); 
+           textNodes.push(match[0]); // Should not happen with current regex but good fallback
         }
         lastIndex = localKeywordRegex.lastIndex;
       }
       
-      if (lastIndex < part.length) {
-        textSegments.push(part.substring(lastIndex));
+      if (lastIndex < segment.length) {
+        textNodes.push(segment.substring(lastIndex));
       }
       
-      return textSegments.map((segment, segmentIndex) => (
-        <React.Fragment key={`segment-${step.id}-${partIndex}-${segmentIndex}`}>
-          {segment}
+      return textNodes.map((node, nodeIndex) => (
+        <React.Fragment key={`textnode-${step.id}-${partKey}-${segmentIndex}-${nodeIndex}`}>
+          {node}
         </React.Fragment>
       ));
     });
   };
+
 
   return (
     <AccordionItem value={`step-${step.id}`} className="border-b-0 mb-4 last:mb-0">
@@ -168,7 +175,7 @@ export function WalkthroughStep({ step, isCompleted, isOpen, onToggleComplete, s
         </AccordionTrigger>
         <AccordionContent className="px-6 pb-6">
           <div className="space-y-4">
-            {step.instructions.map((instr, index) => (
+            {step.instructions.map((instrNode, index) => (
               <div key={index} className="flex items-start">
                 <ChevronRight 
                   className={cn(
@@ -177,7 +184,7 @@ export function WalkthroughStep({ step, isCompleted, isOpen, onToggleComplete, s
                   )} 
                 />
                 <p className={cn("leading-relaxed", isOpen ? "text-foreground/90" : "text-muted-foreground")}>
-                  {renderInstruction(instr)}
+                  {renderInstructionPart(instrNode, index)}
                 </p>
               </div>
             ))}
@@ -212,7 +219,7 @@ export function WalkthroughStep({ step, isCompleted, isOpen, onToggleComplete, s
                       {React.cloneElement(alertIcon, { className: cn(alertIcon.props.className, alert.type === 'warning' ? "" : "text-primary") })}
                       <AlertTitle className={cn(alert.type === 'warning' ? "" : "text-primary/90")}>{alert.title || defaultTitle}</AlertTitle>
                       <AlertDescription className={cn(alert.type === 'warning' ? "" : "text-foreground font-medium")}>
-                        {renderInstruction(alert.message)}
+                        {typeof alert.message === 'string' ? renderInstructionPart(alert.message, `alert-${index}`) : alert.message}
                       </AlertDescription>
                     </Alert>
                   );

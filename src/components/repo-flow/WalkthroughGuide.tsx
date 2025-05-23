@@ -2,8 +2,9 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Github, GitBranch, Cloud, UploadCloud, Settings, CheckCircle, Package, Rocket, Link as LinkIcon, Info, Lightbulb, AlertTriangle } from 'lucide-react';
+import { Github, GitBranch, Cloud, UploadCloud, Settings, CheckCircle, Package, Rocket, Link as LinkIcon, Info, Lightbulb, AlertTriangle, MonitorPlay, Save, TerminalSquareIcon } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import Image from 'next/image';
 import { Accordion } from '@/components/ui/accordion';
 import { Progress } from '@/components/ui/progress';
 import { WalkthroughStep, type StepContent } from './WalkthroughStep';
@@ -11,128 +12,118 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const initialSteps: StepContent[] = [
   {
-    id: 'init-git',
-    title: 'Start Tracking Your Project with Git',
+    id: 'open-code-tools',
+    title: 'Switch to Code & Open Your Tools',
+    Icon: MonitorPlay,
     instructions: [
-      "First things first! If you were just using a Firebase visual prototyper, make sure you've clicked on the 'Switch to Code' option (you might see an icon for this, maybe in the top right corner of your tool). This guide is for when you can see all your project's files and folders (the code!).",
-      "Open your project's main folder in a terminal. (Your code editor, like VS Code, often has a built-in terminal, or you can use a separate one like Terminal on Mac or Command Prompt on Windows).",
-      "Time to tell Git to start keeping track of your project! Type `git init` in your terminal. This command sets up Git in your project folder so it can start saving your work's history."
+      "First, if you're in a Firebase visual tool, find the 'Switch to Code' button (often an icon, maybe in the top-right of your screen). This guide is for when you can see all your project's files and folders.",
+      "In your code editor (like Firebase Studio, shown below), you need to open two things:",
+      <ul key="tools-list" className="list-disc list-inside pl-4 my-2 space-y-1">
+        <li><strong className="text-primary">Terminal:</strong> Where you'll type commands.</li>
+        <li><strong className="text-primary">Source Control:</strong> Where you can see file changes.</li>
+      </ul>,
+      "Go to the 'View' menu at the top. From there, select 'Terminal' and then 'Source Control'. (Shortcuts are often `Ctrl+\`` for Terminal and `Ctrl+Shift+G` for Source Control on Windows/Linux, or `Cmd+\`` and `Cmd+Shift+G` on Mac).",
+      <div key="editor-image" className="my-4 rounded-md overflow-hidden border border-border shadow-md">
+        <Image
+          src="https://placehold.co/600x350.png"
+          alt="Code editor view menu showing Terminal and Source Control options"
+          width={600}
+          height={350}
+          className="w-full h-auto"
+          data-ai-hint="code editor view menu"
+        />
+      </div>
     ],
-    commands: ['git init'],
-    Icon: GitBranch,
   },
   {
-    id: 'add-files',
-    title: 'Get Your Files Ready for Saving',
+    id: 'save-work-git',
+    title: 'Save Your Work with Git',
+    Icon: Save,
     instructions: [
-      "Now that Git is set up, you need to tell it which files you want to include in your next save.",
-      "Type `git add .` (don't forget the dot!) in your terminal. This tells Git to get *all* your project files ready to be saved. Think of it like putting all your documents in a pile before you file them away."
+      "Before sending your code to GitHub, you need to officially 'save' it using Git. This is like taking a snapshot of your project.",
+      "In the Terminal you just opened, type these commands one by one. Press Enter after each one:",
     ],
-    commands: ['git add .'],
-    Icon: Package,
-  },
-  {
-    id: 'commit-changes',
-    title: 'Save Your Changes (Make a "Commit")',
-    instructions: [
-      "Now, let's officially save the files you just prepared. This is called a 'commit' in Git language.",
-      "Type `git commit -m \"Initial commit\"` in your terminal. This saves your files. The part in quotes is a message to remind you (or others) what this save was about. 'Initial commit' is a common message for the very first save."
+    commands: [
+      'git init',
+      'git add .',
+      'git commit -m "My first project version"'
     ],
-    commands: ['git commit -m "Initial commit"'],
-    Icon: CheckCircle,
+    alerts: [
+      {
+        type: 'info',
+        title: 'What these commands do:',
+        message: "`git init`: Sets up Git tracking (if it's not already).\n`git add .`: Gets all your project files ready to be saved.\n`git commit -m \"...\"`: Saves your files with a message. You can change the message inside the quotes!"
+      }
+    ]
   },
   {
     id: 'create-github-repo',
     title: 'Create a Home for Your Code on GitHub',
+    Icon: Github,
     instructions: [
-      "Head over to GitHub and sign in to your account (or create one if you're new!).",
-      "Click the `+` icon in the top right corner and select 'New repository'.",
-      "Choose a name for your project on GitHub (like `my-cool-app`). You can also write a short description if you like.",
-      "Decide if you want your project to be public (anyone can see it) or private (only you and people you choose can see it). Either way is fine for Vercel."
+      "Go to GitHub.com. If you don't have an account, create one – it's free!",
+      "Once you're signed in, look for a `+` icon (usually in the top right corner) and select 'New repository'.",
+      "Give your repository a name (like `my-cool-app`). You can write a short description if you want.",
+      "Choose if you want your project to be public (anyone can see it) or private (only you and people you choose can see it).",
     ],
     alerts: [
       {
         type: 'warning',
         title: 'Super Important!',
-        message: "When GitHub asks if you want to add files like a README, .gitignore, or license, **don't check any of those boxes!** Your project already has these, and we'll upload them from your computer."
+        message: "When GitHub asks if you want to add files like a README, .gitignore, or license, **do NOT check any of those boxes!** Your project already has these, and we'll upload them from your computer."
       }
     ],
-    Icon: Github,
   },
   {
-    id: 'link-remote',
-    title: "Connect Your Computer's Project to GitHub",
-    instructions: [
-      "After creating your project on GitHub, you'll see a special web address (URL) for it. It usually starts with `https://`.",
-      "Back in your terminal, type `git remote add origin <your-repo-url>`. This command tells Git on your computer where your project lives on GitHub."
-    ],
-    alerts: [
-      {
-        type: 'info',
-        title: 'Remember!',
-        message: "Replace `<your-repo-url>` with the actual URL from your GitHub repository page. Just copy and paste it!"
-      }
-    ],
-    commands: ['git remote add origin https://github.com/your-username/your-repo-name.git'],
-    Icon: LinkIcon,
-  },
-  {
-    id: 'push-github',
+    id: 'push-to-github',
     title: 'Send Your Code to GitHub',
-    instructions: [
-      "Now it's time to send all the changes you've saved on your computer up to GitHub.",
-      "Type `git push -u origin main` in your terminal. This 'pushes' (sends) your code. The `-u origin main` part is just a way to tell Git to remember this connection for next time, making future pushes simpler."
-    ],
-    alerts: [
-      {
-        type: 'note',
-        title: 'Branch Name Check',
-        message: "Heads up: Your project's main code line (called a 'branch') might be named `main` or `master`. Make sure the command uses the correct name for your project. `main` is most common these days."
-      }
-    ],
-    commands: ['git push -u origin main'],
     Icon: UploadCloud,
-  },
-  {
-    id: 'vercel-signup',
-    title: 'Get Ready with Vercel',
     instructions: [
-      "Now, let's go to Vercel.",
-      "If you don't have a Vercel account, sign up for one. If you do, just log in. The easiest way is often to use your GitHub account to sign up or log in – it makes things smoother!"
+      "After creating your repository on GitHub, it will show you a page with some commands. Look for a section that says something like '…or push an existing repository from the command line'.",
+      "You'll see a few lines of code there. They will look similar to this (but with YOUR username and YOUR repository name):",
     ],
-    Icon: Cloud,
-  },
-  {
-    id: 'vercel-import',
-    title: 'Bring Your GitHub Project into Vercel',
-    instructions: [
-      "After logging into Vercel, look for a button like 'Add New...' or 'Import Project'. This is usually on your main dashboard.",
-      "Vercel will ask to connect to your GitHub. Allow it, and then pick the project (repository) you just put on GitHub.",
-      "Vercel is smart and usually figures out it's a Next.js project all by itself!"
-    ],
-    Icon: Settings,
-  },
-  {
-    id: 'vercel-deploy',
-    title: 'Set Up and Launch Your Next.js App on Vercel',
-    instructions: [
-      "Vercel will show some settings for your project. For most Next.js apps that work with Firebase, the standard settings Vercel suggests are usually perfect.",
-      "If your app needs any secret codes or special settings for Firebase (like API keys), you can add them here in Vercel. For Next.js, these often start with `NEXT_PUBLIC_` if your website's visitors need to use them (otherwise, keep them secret!).",
-      "Hit the 'Deploy' button! Vercel will then work its magic, get your Next.js app ready, and put it online."
+    commands: [
+      'git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPOSITORY_NAME.git',
+      'git branch -M main',
+      'git push -u origin main'
     ],
     alerts: [
        {
+        type: 'note',
+        title: 'Copy & Paste Carefully!',
+        message: "Copy ALL those lines exactly as GitHub shows them. Then, go back to the Terminal in your code editor (Firebase Studio) and paste them in. Press Enter. This sends your code to GitHub!"
+      },
+      {
+        type: 'info',
+        title: 'Branch Name Note',
+        message: "GitHub might suggest `main` or `master` for your branch name. The commands usually handle this correctly. `main` is the modern standard."
+      }
+    ],
+  },
+  {
+    id: 'deploy-vercel',
+    title: 'Go Live with Vercel!',
+    Icon: Rocket,
+    instructions: [
+      "Awesome! Your code is safe on GitHub. Now, let's make your website live for everyone to see using Vercel.",
+      "Go to Vercel.com. Sign up (using your GitHub account is the easiest way) or log in.",
+      "Once in Vercel, click on 'Add New...' and then 'Project'.",
+      "Vercel will ask to connect to your GitHub. Allow it, and then choose the repository you just pushed your code to.",
+      "Vercel is smart and usually figures out it's a Next.js project. The default settings are typically perfect.",
+      "Click the 'Deploy' button!",
+    ],
+    alerts: [
+      {
         type: 'info',
         title: 'How Vercel and Firebase Work Together',
-        message: "Good to know: Vercel takes care of putting your Next.js website online. All your Firebase stuff (like databases, user logins, and special functions) still lives in Firebase and is managed from your Firebase console. Your website will talk to Firebase just like you set it up."
+        message: "Vercel will build and host your Next.js website (the frontend). All your Firebase backend stuff (like databases, user logins, Cloud Functions) still lives in Firebase and is managed from your Firebase console. Your Vercel site will talk to Firebase just like you set it up!"
       },
       {
         type: 'note',
         title: 'Your App is Live!',
-        message: "Once Vercel is done, it will give you a special web address (URL) where your app is live on the internet! You can watch its progress, and soon you'll have a link to share."
+        message: "Vercel will show you the progress. When it's done, you'll get a special web address (URL) where your app is live on the internet! 🎉"
       }
     ],
-    Icon: Rocket,
   },
 ];
 
