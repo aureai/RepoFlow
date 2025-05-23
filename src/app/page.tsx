@@ -33,7 +33,8 @@ export default function HomePage() {
             </div>
           </div>
 
-          <Separator className="my-12 md:my-16" />
+          {/* Removed "Why RepoFlow?" section and its Separator */}
+          {/* <Separator className="my-12 md:my-16" />
 
           <section className="mb-12 md:mb-16">
              <h3 className="text-3xl font-bold text-center text-foreground mb-8">Why RepoFlow?</h3>
@@ -55,7 +56,7 @@ export default function HomePage() {
                 </CardContent>
               </Card>
             </div>
-          </section>
+          </section> */}
         </MouseGlowEffect>
       </main>
       <Footer />
