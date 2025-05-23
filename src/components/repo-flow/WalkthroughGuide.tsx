@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { ArrowLeft, ArrowRight, TerminalSquareIcon, Github, Rocket, AlertTriangle, Info, Lightbulb } from 'lucide-react';
+import { ArrowLeft, ArrowRight, TerminalSquareIcon, Github, Rocket, AlertTriangle, Info, Lightbulb, Eye, Code } from 'lucide-react';
 import { WalkthroughStep, type StepContent } from './WalkthroughStep';
 import { Button } from '@/components/ui/button';
 
@@ -31,6 +31,14 @@ const initialSteps: StepContent[] = [
           <code className="bg-muted px-1.5 py-0.5 rounded-sm font-mono text-sm text-accent shadow-sm border border-border/70">git add .</code>: Gets all your current project files ready to be saved.<br/>
           <code className="bg-muted px-1.5 py-0.5 rounded-sm font-mono text-sm text-accent shadow-sm border border-border/70">git commit -m "..."</code>: Saves a snapshot (a version) of your files with a short note about what you did.
         </>
+      },
+      {
+        type: 'note',
+        Icon: Lightbulb,
+        title: "Pro Tip:",
+        message: <>
+          Keep your Firebase visual prototyper open in one browser tab and your code editor (like the one in Firebase Studio&apos;s <strong className="text-primary">Code View</strong>) in another. This makes it easier to see your visual design and apply changes to the code. If you have questions about the code, remember you can often chat with AI assistants (like Gemini) directly within your code editor!
+        </>
       }
     ]
   },
@@ -39,11 +47,11 @@ const initialSteps: StepContent[] = [
     title: '2. Link Your Code to GitHub',
     Icon: Github,
     instructions: [
-      <>Next, let's get your code onto <strong className="text-primary">GitHub</strong>.</>,
-      <>If you don't have a GitHub account, create one. Then, on <strong className="text-primary">GitHub</strong>, click '<strong className="text-primary">New repository</strong>'.</>,
-      <>Give your repository a name (like `my-cool-app`). You can choose if it's <strong className="text-primary">public</strong> (anyone can see) or <strong className="text-primary">private</strong> (only you and people you invite). A description is optional.</>,
+      <>Next, let&apos;s get your code onto <strong className="text-primary">GitHub</strong>.</>,
+      <>If you don&apos;t have a GitHub account, create one. Then, on <strong className="text-primary">GitHub</strong>, click <strong key="new-repo-step2" className="text-primary">New repository</strong>.</>,
+      <>Give your repository a name (like <code className="bg-muted px-1.5 py-0.5 rounded-sm font-mono text-sm text-accent shadow-sm border border-border/70">my-cool-app</code>). You can choose if it&apos;s <strong key="public-step2" className="text-primary">public</strong> (anyone can see) or <strong key="private-step2" className="text-primary">private</strong> (only you and people you invite). A description is optional.</>,
       <>After creating the repository, GitHub will show you some instructions. Look for the section that says '<strong className="text-primary">…or push an existing repository from the command line</strong>'.</>,
-      <>GitHub will give you a few commands. They'll look something like this (but use <strong className="text-primary">YOUR actual GitHub username and repository name</strong> from the page!):</>,
+      <>GitHub will give you a few commands. They&apos;ll look something like this (but use <strong key="your-repo-name" className="text-primary">YOUR actual GitHub username and repository name</strong> from the page!):</>,
     ],
     commands: [
       'git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPOSITORY_NAME.git',
@@ -76,11 +84,11 @@ const initialSteps: StepContent[] = [
     title: '3. Go Live with Vercel!',
     Icon: Rocket,
     instructions: [
-      <>Awesome! Your code is now safely on <strong className="text-primary">GitHub</strong>. Let's get your app live on the internet using <strong className="text-primary">Vercel</strong>.</>,
+      <>Awesome! Your code is now safely on <strong className="text-primary">GitHub</strong>. Let&apos;s get your app live on the internet using <strong className="text-primary">Vercel</strong>.</>,
       <>Go to <strong className="text-primary">Vercel</strong>. If you sign up using your <strong className="text-primary">GitHub</strong> account, it makes things super smooth.</>,
       <>On your <strong className="text-primary">Vercel</strong> dashboard, look for a button like '<strong className="text-primary">Add New...</strong>' then choose '<strong className="text-primary">Project</strong>'.</>,
-      <><strong className="text-primary">Vercel</strong> will ask to connect to your <strong className="text-primary">GitHub</strong>. Allow it, then find and import the repository you just pushed your code to.</>,
-      <><strong className="text-primary">Vercel</strong> is smart and usually figures out all the settings for your app automatically. The default settings are often all you need.</>,
+      <>Vercel will ask to connect to your <strong className="text-primary">GitHub</strong>. Allow it, then find and import the repository you just pushed your code to.</>,
+      <>Vercel is smart and usually figures out all the settings for your app automatically. The default settings are often all you need.</>,
       <>Click '<strong className="text-primary">Deploy</strong>'.</>,
     ],
     alerts: [
