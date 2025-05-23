@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { ArrowLeft, ArrowRight, TerminalSquareIcon, Github, Rocket } from 'lucide-react';
+import { ArrowLeft, ArrowRight, TerminalSquareIcon, Github, Rocket, AlertTriangle } from 'lucide-react';
 import { WalkthroughStep, type StepContent } from './WalkthroughStep';
 import { Button } from '@/components/ui/button';
 
@@ -12,13 +12,13 @@ const initialSteps: StepContent[] = [
     title: "1. Get Your Code Ready & Tools Open",
     Icon: TerminalSquareIcon,
     instructions: [
-      "Switch to 'Code View' in your Firebase tool. Ensure you can see your project's files.",
+      "First up! If you were using a visual tool, make sure you've switched to 'Code View' (look for an icon, often in the top-right!). This guide is for when you can see all your project's files.",
       "In your code editor:",
       <ul key="tools-list-step1" className="list-disc list-inside pl-4 my-2 space-y-1">
-        <li>Open your <strong className="text-primary">Project's File Directory</strong>.</li>
+        <li>Have your <strong className="text-primary">Project's File Directory</strong> open.</li>
         <li>Open the <strong className="text-primary">Terminal (Command Line)</strong>.</li>
       </ul>,
-      "Save your current app version. In the Terminal, type these commands:",
+      "Time to save your app's current version. In your Terminal, type these commands one by one:",
     ],
     commands: [
       'git init',
@@ -28,11 +28,11 @@ const initialSteps: StepContent[] = [
     alerts: [
       {
         type: 'info',
-        title: "Command Explanations:",
+        title: "What these commands do:",
         message: <>
-          <code className="bg-muted px-1.5 py-0.5 rounded-sm font-mono text-sm text-accent shadow-sm border border-border/70">git init</code>: Initializes Git for this project. (Run once per project).<br/>
-          <code className="bg-muted px-1.5 py-0.5 rounded-sm font-mono text-sm text-accent shadow-sm border border-border/70">git add .</code>: Stages all current project files for saving.<br/>
-          <code className="bg-muted px-1.5 py-0.5 rounded-sm font-mono text-sm text-accent shadow-sm border border-border/70">git commit -m "..."</code>: Saves a snapshot of your files with a descriptive message.
+          <code className="bg-muted px-1.5 py-0.5 rounded-sm font-mono text-sm text-accent shadow-sm border border-border/70">git init</code>: Sets up Git for your project (you only do this once per project).<br/>
+          <code className="bg-muted px-1.5 py-0.5 rounded-sm font-mono text-sm text-accent shadow-sm border border-border/70">git add .</code>: Gets all your current project files ready to be saved.<br/>
+          <code className="bg-muted px-1.5 py-0.5 rounded-sm font-mono text-sm text-accent shadow-sm border border-border/70">git commit -m "..."</code>: Saves a snapshot (a version) of your files with a short note about what you did.
         </>
       }
     ]
@@ -42,11 +42,11 @@ const initialSteps: StepContent[] = [
     title: '2. Link Your Code to GitHub',
     Icon: Github,
     instructions: [
-      "Connect your local code to a GitHub repository.",
-      "Create a GitHub account if you don't have one. Then, create a 'New repository'.",
-      "Name your repository (e.g., `my-firebase-app`). Choose public or private. A description is optional.",
-      "After creating the repository, GitHub will show instructions. Find the section '…or push an existing repository from the command line'.",
-      "GitHub will provide commands similar to these (use <strong class='text-primary'>YOUR actual GitHub username and repository name</strong>):",
+      "Next, let's get your code onto GitHub.",
+      "If you don't have a GitHub account, create one. Then, on GitHub, click 'New repository'.",
+      "Give your repository a name (like `my-cool-app`). You can choose if it's public (anyone can see) or private (only you and people you invite). A description is optional.",
+      "After creating the repository, GitHub will show you some instructions. Look for the section that says '…or push an existing repository from the command line'.",
+      "GitHub will give you a few commands. They'll look something like this (but use <strong class='text-primary'>YOUR actual GitHub username and repository name</strong> from the page!):",
     ],
     commands: [
       'git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPOSITORY_NAME.git',
@@ -56,13 +56,19 @@ const initialSteps: StepContent[] = [
     alerts: [
        {
         type: 'warning',
-        title: 'Important: Empty GitHub Repo',
-        message: "Do NOT initialize the new GitHub repository with a README, .gitignore, or license. Your project already has these. An empty repository is needed."
+        title: 'IMPORTANT: Keep Your Repo Empty on GitHub!',
+        message: "When creating the new repository on GitHub, do NOT check any boxes to add a README, .gitignore, or license. Your project already has these files. You need an empty canvas on GitHub for this step."
+      },
+      {
+        type: 'warning',
+        Icon: AlertTriangle,
+        title: 'CRITICAL: DO NOT SHARE YOUR API KEYS OR SECRETS!',
+        message: "Before you push your code, double-check your project files. Make absolutely sure you are NOT uploading any API keys, passwords, or other sensitive information. Check your `.gitignore` file (it's in your project's main folder) to ensure files or folders containing secrets are listed there. If they aren't, add them! This is very important to keep your app and accounts secure."
       },
       {
         type: 'note',
-        title: 'Copy & Paste Commands',
-        message: "Copy all commands GitHub provides under '…or push an existing repository...'. Paste them into your Terminal and press Enter. This links your local project and uploads your code to GitHub."
+        title: 'Copy & Paste from GitHub',
+        message: "Carefully copy all three commands GitHub gives you under '…or push an existing repository...'. Paste them into your Terminal (the one in your code editor) and press Enter. This tells your local project where your GitHub repository is and uploads your code to it."
       }
     ],
   },
@@ -71,23 +77,23 @@ const initialSteps: StepContent[] = [
     title: '3. Go Live with Vercel!',
     Icon: Rocket,
     instructions: [
-      "Deploy your app using Vercel. Your code is now on GitHub.",
-      "Go to Vercel. Sign up with your GitHub account for easy integration.",
-      "On your Vercel dashboard, click 'Add New...' then 'Project'.",
-      "Connect Vercel to your GitHub account. Import the repository you just created.",
-      "Vercel usually auto-detects settings. Default settings are typically sufficient.",
+      "Awesome! Your code is now safely on GitHub. Let's get your app live on the internet using Vercel.",
+      "Go to Vercel. If you sign up using your GitHub account, it makes things super smooth.",
+      "On your Vercel dashboard, look for a button like 'Add New...' then choose 'Project'.",
+      "Vercel will ask to connect to your GitHub. Allow it, then find and import the repository you just pushed your code to.",
+      "Vercel is smart and usually figures out all the settings for your app automatically. The default settings are often all you need.",
       "Click 'Deploy'.",
     ],
     alerts: [
       {
         type: 'info',
-        title: 'Vercel and Firebase',
-        message: "Vercel hosts your app's frontend. Your Firebase backend (database, auth, etc.) remains in Firebase, managed via the Firebase console. Your Vercel-hosted app connects to Firebase services. You may need to add Firebase project details (API keys) as 'Environment Variables' in Vercel project settings for proper connection."
+        title: 'How Vercel and Firebase Work Together',
+        message: "Vercel will host the 'front-end' of your app (what users see and interact with). Your Firebase 'back-end' (database, user authentication, etc.) still lives in Firebase and is managed through the Firebase console. Your app hosted on Vercel will talk to your Firebase services. Sometimes, you might need to tell Vercel about your Firebase project by adding details (like API keys) as 'Environment Variables' in your Vercel project settings. This helps Vercel connect to your Firebase services securely."
       },
       {
         type: 'note',
-        title: 'App Live!',
-        message: "Vercel shows build and deployment progress. Once done (a few minutes), Vercel provides a URL. Your app is now live."
+        title: 'Your App is Live!',
+        message: "Vercel will show you its progress. After a few minutes, it will give you a website address (URL). That's it – your app is live for the world to see!"
       }
     ],
   },
@@ -165,3 +171,4 @@ export function WalkthroughGuide() {
     </div>
   );
 }
+
