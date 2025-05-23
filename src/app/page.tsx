@@ -16,7 +16,7 @@ export default function HomePage() {
               RepoFlow: Your Guide to Publishing Your Firebase App
             </h2>
             <p className="text-lg md:text-xl text-foreground/80 max-w-3xl mx-auto">
-              Built your app with a Firebase visual tool? First, switch to <strong className="text-primary">'Code View'</strong> (often an icon in the top-right). RepoFlow then guides you to get your Next.js app onto GitHub and live with Vercel.
+              Built your app with a Firebase visual tool? First, switch to <strong className="text-primary">'Code View'</strong> (often an icon in the top-right). RepoFlow then guides you to get your app&apos;s code onto GitHub and live with Vercel.
             </p>
           </section>
 

@@ -22,7 +22,7 @@ const faqData = [
     question: "What is Vercel?",
     Icon: ArrowUpCircle,
     answer: [
-      "Vercel is a platform that makes your website (often a Next.js application, which is a popular way to build the 'frontend' or visual part of your app) live on the internet incredibly easily. For Next.js apps, it's especially powerful because Vercel is made by the same creators.",
+      "Vercel is a platform that makes your website (often a modern frontend application) live on the internet incredibly easily. It's especially good for web apps built with popular frameworks because Vercel is made by the creators of some of those tools.",
       "It takes your code (from your GitHub repository, in our case) and 'builds' it into a working website that anyone can visit using a web address (URL).",
       "Vercel handles all the complicated server stuff, deployment processes, and scaling, so you don't have to worry about managing infrastructure. It makes your website run fast and efficiently.",
       "A key feature is that Vercel can automatically update your live website whenever you update your code on GitHub, which is super handy!"
@@ -34,7 +34,7 @@ const faqData = [
     Icon: RefreshCw,
     answer: [
       "This is one of the best parts about using GitHub and Vercel together! Once you've set up your project and deployed it for the first time, updating it is very straightforward:",
-      "1. **Make changes to your code:** Edit your project files in Firebase Studio (in Code View) or your preferred code editor.",
+      "1. **Make changes to your code:** Edit your project files (in Code View) or your preferred code editor.",
       "2. **Save your changes with Git (locally):** Just like you did during the initial setup, you need to tell Git about your new changes. Open your Terminal and type these commands:",
       "<ul class='list-disc list-inside pl-4 my-2 space-y-1'><li><code>git add .</code> (This gets all changed files ready to be saved. You can also do <code>git add &lt;specific_file_name&gt;</code> if you only want to save certain files.)</li><li><code>git commit -m \"Your clear message about what you updated\"</code> (This saves a snapshot of your changes with a descriptive message. For example, <code>git commit -m \"Updated the homepage text\"</code>)</li></ul>",
       "3. **Send your changes to GitHub:** Type this command in your Terminal: <code>git push origin main</code> (If your main branch has a different name, like <code>master</code>, use that instead of <code>main</code>).",

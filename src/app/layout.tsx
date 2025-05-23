@@ -7,7 +7,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 
 export const metadata: Metadata = {
   title: 'RepoFlow: Guide to Publishing Your Firebase App',
-  description: 'Guided walkthrough for Firebase developers: link your Next.js app to GitHub and deploy with Vercel.',
+  description: 'Guided walkthrough for Firebase developers: link your local app code to GitHub and deploy with Vercel.',
 };
 
 export default function RootLayout({
