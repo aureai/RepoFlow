@@ -13,12 +13,8 @@ const initialSteps: StepContent[] = [
     Icon: TerminalSquareIcon,
     instructions: [
       <>First up! If you were using a visual tool, make sure you've switched to '<strong key="code-view-step1" className="text-primary">Code View</strong>' (look for an icon, often in the top-right!). This guide is for when you can see all your project's files.</>,
-      "In your code editor:",
-      <ul key="tools-list-step1" className="list-disc list-inside pl-4 my-2 space-y-1">
-        <li>Have your <strong className="text-primary">Project's File Directory</strong> open.</li>
-        <li>Open the <strong className="text-primary">Terminal (Command Line)</strong>.</li>
-      </ul>,
-      "Time to save your app's current version. In your Terminal, type these commands one by one:",
+      <>In your code editor, open the <strong className="text-primary">Terminal (Command Line)</strong> and have your <strong className="text-primary">Project's File Directory</strong> visible.</>,
+      <>Time to save your app's current version. In your Terminal, type these commands one by one:</>,
     ],
     commands: [
       'git init',
@@ -28,6 +24,7 @@ const initialSteps: StepContent[] = [
     alerts: [
       {
         type: 'info',
+        Icon: Info,
         title: "What these commands do:",
         message: <>
           <code className="bg-muted px-1.5 py-0.5 rounded-sm font-mono text-sm text-accent shadow-sm border border-border/70">git init</code>: Sets up Git for your project (you only do this once per project).<br/>
@@ -42,11 +39,11 @@ const initialSteps: StepContent[] = [
     title: '2. Link Your Code to GitHub',
     Icon: Github,
     instructions: [
-      <>Next, let's get your code onto <strong key="github-step2" className="text-primary">GitHub</strong>.</>,
-      <>If you don't have a GitHub account, create one. Then, on <strong key="github-link-step2" className="text-primary">GitHub</strong>, click '<strong key="new-repo-step2" className="text-primary">New repository</strong>'.</>,
-      <>Give your repository a name (like `my-cool-app`). You can choose if it's <strong key="public-step2" className="text-primary">public</strong> (anyone can see) or <strong key="private-step2" className="text-primary">private</strong> (only you and people you invite). A description is optional.</>,
-      <>After creating the repository, GitHub will show you some instructions. Look for the section that says '<strong key="push-existing-step2" className="text-primary">…or push an existing repository from the command line</strong>'.</>,
-      <>GitHub will give you a few commands. They'll look something like this (but use <strong key="gh-username-repo" className="text-primary">YOUR actual GitHub username and repository name</strong> from the page!):</>,
+      <>Next, let's get your code onto <strong className="text-primary">GitHub</strong>.</>,
+      <>If you don't have a GitHub account, create one. Then, on <strong className="text-primary">GitHub</strong>, click '<strong className="text-primary">New repository</strong>'.</>,
+      <>Give your repository a name (like `my-cool-app`). You can choose if it's <strong className="text-primary">public</strong> (anyone can see) or <strong className="text-primary">private</strong> (only you and people you invite). A description is optional.</>,
+      <>After creating the repository, GitHub will show you some instructions. Look for the section that says '<strong className="text-primary">…or push an existing repository from the command line</strong>'.</>,
+      <>GitHub will give you a few commands. They'll look something like this (but use <strong className="text-primary">YOUR actual GitHub username and repository name</strong> from the page!):</>,
     ],
     commands: [
       'git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPOSITORY_NAME.git',
@@ -56,6 +53,7 @@ const initialSteps: StepContent[] = [
     alerts: [
        {
         type: 'warning',
+        Icon: AlertTriangle,
         title: 'IMPORTANT: Keep Your Repo Empty on GitHub!',
         message: "When creating the new repository on GitHub, do NOT check any boxes to add a README, .gitignore, or license. Your project already has these files. You need an empty canvas on GitHub for this step."
       },
@@ -67,6 +65,7 @@ const initialSteps: StepContent[] = [
       },
       {
         type: 'note',
+        Icon: Lightbulb,
         title: 'Copy & Paste from GitHub',
         message: "Carefully copy all three commands GitHub gives you under '…or push an existing repository...'. Paste them into your Terminal (the one in your code editor) and press Enter. This tells your local project where your GitHub repository is and uploads your code to it."
       }
@@ -77,21 +76,23 @@ const initialSteps: StepContent[] = [
     title: '3. Go Live with Vercel!',
     Icon: Rocket,
     instructions: [
-      <>Awesome! Your code is now safely on <strong key="github-step3" className="text-primary">GitHub</strong>. Let's get your app live on the internet using <strong key="vercel-step3" className="text-primary">Vercel</strong>.</>,
-      <>Go to <strong key="vercel-link-step3" className="text-primary">Vercel</strong>. If you sign up using your <strong key="github-account-step3" className="text-primary">GitHub</strong> account, it makes things super smooth.</>,
-      <>On your <strong key="vercel-dashboard-step3" className="text-primary">Vercel</strong> dashboard, look for a button like '<strong key="add-new-step3" className="text-primary">Add New...</strong>' then choose '<strong key="project-step3" className="text-primary">Project</strong>'.</>,
-      <><strong key="vercel-connect-step3" className="text-primary">Vercel</strong> will ask to connect to your <strong key="github-connect-step3" className="text-primary">GitHub</strong>. Allow it, then find and import the repository you just pushed your code to.</>,
-      <><strong key="vercel-smart-step3" className="text-primary">Vercel</strong> is smart and usually figures out all the settings for your app automatically. The default settings are often all you need.</>,
-      <>Click '<strong key="deploy-step3" className="text-primary">Deploy</strong>'.</>,
+      <>Awesome! Your code is now safely on <strong className="text-primary">GitHub</strong>. Let's get your app live on the internet using <strong className="text-primary">Vercel</strong>.</>,
+      <>Go to <strong className="text-primary">Vercel</strong>. If you sign up using your <strong className="text-primary">GitHub</strong> account, it makes things super smooth.</>,
+      <>On your <strong className="text-primary">Vercel</strong> dashboard, look for a button like '<strong className="text-primary">Add New...</strong>' then choose '<strong className="text-primary">Project</strong>'.</>,
+      <><strong className="text-primary">Vercel</strong> will ask to connect to your <strong className="text-primary">GitHub</strong>. Allow it, then find and import the repository you just pushed your code to.</>,
+      <><strong className="text-primary">Vercel</strong> is smart and usually figures out all the settings for your app automatically. The default settings are often all you need.</>,
+      <>Click '<strong className="text-primary">Deploy</strong>'.</>,
     ],
     alerts: [
       {
         type: 'info',
+        Icon: Info,
         title: 'How Vercel and Firebase Work Together',
         message: "Vercel will host the 'front-end' of your app (what users see and interact with). Your Firebase 'back-end' (database, user authentication, etc.) still lives in Firebase and is managed through the Firebase console. Your app hosted on Vercel will talk to your Firebase services. Sometimes, you might need to tell Vercel about your Firebase project by adding details (like API keys) as 'Environment Variables' in your Vercel project settings. This helps Vercel connect to your Firebase services securely."
       },
       {
         type: 'note',
+        Icon: Lightbulb,
         title: 'Your App is Live!',
         message: "Vercel will show you its progress. After a few minutes, it will give you a website address (URL). That's it – your app is live for the world to see!"
       }

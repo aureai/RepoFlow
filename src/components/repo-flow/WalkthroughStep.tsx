@@ -8,7 +8,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { AlertTriangle, Info, Lightbulb, ChevronRight, Copy, Check } from 'lucide-react';
+import { AlertTriangle, Info, Lightbulb, Copy, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 
@@ -18,7 +18,7 @@ export interface StepContent {
   instructions: React.ReactNode[];
   Icon?: LucideIcon;
   commands?: string[];
-  alerts?: { type: 'warning' | 'info' | 'note'; title?: string; message: string | React.ReactNode }[];
+  alerts?: { type: 'warning' | 'info' | 'note'; title?: string; Icon?: LucideIcon; message: React.ReactNode }[];
 }
 
 interface WalkthroughStepProps {
@@ -30,7 +30,7 @@ interface WalkthroughStepProps {
 }
 
 export function WalkthroughStep({ step, isCompleted, onToggleComplete, stepNumber }: WalkthroughStepProps) {
-  const { Icon } = step;
+  const { Icon: StepIconComponent } = step; // Renamed to avoid conflict with LucideIcon type
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
 
@@ -65,9 +65,9 @@ export function WalkthroughStep({ step, isCompleted, onToggleComplete, stepNumbe
     
     const keywordMap: Record<string, {url: string; displayText: string}> = {
       'github': { url: 'https://github.com', displayText: 'GitHub' },
-      'github.com': { url: 'https://github.com', displayText: 'GitHub.com' },
+      'github.com': { url: 'https://github.com', displayText: 'GitHub' }, // GitHub.com also maps to GitHub
       'vercel': { url: 'https://vercel.com', displayText: 'Vercel' },
-      'vercel.com': { url: 'https://vercel.com', displayText: 'Vercel.com' },
+      'vercel.com': { url: 'https://vercel.com', displayText: 'Vercel' }, // Vercel.com also maps to Vercel
     };
 
     const escapedKeywords = Object.keys(keywordMap).map(k => k.replace('.', '\\.'));
@@ -94,7 +94,7 @@ export function WalkthroughStep({ step, isCompleted, onToggleComplete, stepNumbe
       const localKeywordRegex = new RegExp(keywordRegex); 
       while ((match = localKeywordRegex.exec(segment)) !== null) {
         const matchedKeyword = match[0].toLowerCase();
-        const keywordConfig = keywordMap[matchedKeyword];
+        const keywordConfig = keywordMap[matchedKeyword] || keywordMap[match[0]]; // Check both lowercase and original
 
         if (match.index > lastIndex) {
           textNodes.push(segment.substring(lastIndex, match.index));
@@ -140,8 +140,8 @@ export function WalkthroughStep({ step, isCompleted, onToggleComplete, stepNumbe
     >
       <CardHeader className="pb-4">
         <div className="flex items-center gap-4 mb-2">
-          {Icon && <Icon className="h-10 w-10 text-primary flex-shrink-0" />}
-          {!Icon && 
+          {StepIconComponent && <StepIconComponent className="h-10 w-10 text-primary flex-shrink-0" />}
+          {!StepIconComponent && 
             <div className="flex items-center justify-center h-10 w-10 rounded-full border-2 border-primary text-xl font-semibold text-primary bg-primary/10 flex-shrink-0">
               {stepNumber}
             </div>
@@ -151,42 +151,41 @@ export function WalkthroughStep({ step, isCompleted, onToggleComplete, stepNumbe
       </CardHeader>
       <CardContent className="flex-grow overflow-y-auto space-y-4">
         {step.instructions.map((instrNode, index) => (
-          <div key={index} className="flex items-start">
-            <ChevronRight className="h-5 w-5 mr-2 mt-[3px] flex-shrink-0 text-primary" />
-            <p className="leading-relaxed text-foreground/90">
+            <p key={index} className="leading-relaxed text-foreground/90">
               {renderInstructionPart(instrNode, index)}
             </p>
-          </div>
         ))}
 
         {step.alerts && step.alerts.length > 0 && (
           <div className="space-y-3 mt-4">
             {step.alerts.map((alert, index) => {
-              let alertIcon, alertVariant: "default" | "destructive", defaultTitle;
+              let alertIconElement, alertVariant: "default" | "destructive", defaultTitle;
+              const AlertIconComponent = alert.Icon;
+
               switch (alert.type) {
                 case 'warning':
-                  alertIcon = <AlertTriangle className="h-5 w-5" />;
+                  alertIconElement = AlertIconComponent ? <AlertIconComponent className="h-5 w-5" /> : <AlertTriangle className="h-5 w-5" />;
                   alertVariant = 'destructive';
                   defaultTitle = 'Warning!';
                   break;
                 case 'info':
-                  alertIcon = <Info className="h-5 w-5" />; 
+                  alertIconElement = AlertIconComponent ? <AlertIconComponent className="h-5 w-5" /> : <Info className="h-5 w-5" />; 
                   alertVariant = 'default';
                   defaultTitle = 'Important Info';
                   break;
                 case 'note':
-                  alertIcon = <Lightbulb className="h-5 w-5" />; 
+                  alertIconElement = AlertIconComponent ? <AlertIconComponent className="h-5 w-5" /> : <Lightbulb className="h-5 w-5" />; 
                   alertVariant = 'default';
                   defaultTitle = 'Quick Tip';
                   break;
                 default:
-                  alertIcon = <Info className="h-5 w-5" />;
+                  alertIconElement = <Info className="h-5 w-5" />;
                   alertVariant = 'default';
                   defaultTitle = 'Note';
               }
               return (
                 <Alert key={index} variant={alertVariant} className={cn(alert.type === 'info' || alert.type === 'note' ? "border-primary/30 bg-primary/10" : "")}>
-                  {React.cloneElement(alertIcon, { className: cn(alertIcon.props.className, alert.type === 'warning' ? "" : "text-primary") })}
+                  {React.cloneElement(alertIconElement, { className: cn(alertIconElement.props.className, alert.type === 'warning' ? "" : "text-primary") })}
                   <AlertTitle className={cn(alert.type === 'warning' ? "" : "text-primary/90")}>{alert.title || defaultTitle}</AlertTitle>
                   <AlertDescription className={cn(alert.type === 'warning' ? "" : "text-foreground font-medium")}>
                      {typeof alert.message === 'string' ? renderInstructionPart(alert.message, `alert-${index}`) : alert.message}
