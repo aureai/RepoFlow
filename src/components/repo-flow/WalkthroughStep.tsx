@@ -23,11 +23,12 @@ export interface StepContent {
 interface WalkthroughStepProps {
   step: StepContent;
   isCompleted: boolean;
+  isOpen: boolean;
   onToggleComplete: (id: string, completed: boolean) => void;
   stepNumber: number;
 }
 
-export function WalkthroughStep({ step, isCompleted, onToggleComplete, stepNumber }: WalkthroughStepProps) {
+export function WalkthroughStep({ step, isCompleted, isOpen, onToggleComplete, stepNumber }: WalkthroughStepProps) {
   const { Icon } = step;
 
   const renderInstruction = (instruction: string) => {
@@ -51,16 +52,27 @@ export function WalkthroughStep({ step, isCompleted, onToggleComplete, stepNumbe
   return (
     <AccordionItem value={`step-${step.id}`} className="border-b-0 mb-4 last:mb-0">
       <Card className={cn(
-        "transition-all duration-300 ease-in-out",
-        isCompleted ? "bg-secondary/50 border-primary/50" : "bg-card",
-        "shadow-md hover:shadow-lg"
+        "transition-all duration-300 ease-in-out", // Base transition
+        isOpen
+          ? "border-primary ring-2 ring-primary/30 shadow-2xl scale-[1.01]" // Open: specific border, ring, prominent shadow, scale
+          : "shadow-md hover:shadow-lg", // Not open: default shadow behavior
+        isOpen
+          ? (isCompleted ? "bg-primary/10" : "bg-primary/5") // Open: background based on completion
+          : (isCompleted ? "bg-secondary/50 border-primary/50" : "bg-card") // Not open: existing logic for background and completed border
       )}>
         <AccordionTrigger className="p-6 hover:no-underline">
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-4">
-              {Icon && <Icon className={cn("h-8 w-8", isCompleted ? "text-primary" : "text-muted-foreground")} />}
-              {!Icon && <div className={cn("flex items-center justify-center h-8 w-8 rounded-full border-2 text-lg font-semibold", isCompleted ? "border-primary text-primary bg-primary/10" : "border-muted-foreground text-muted-foreground")}>{stepNumber}</div>}
-              <h4 className={cn("text-xl font-semibold text-left", isCompleted ? "text-primary" : "text-foreground")}>{step.title}</h4>
+              {Icon && <Icon className={cn("h-8 w-8 transition-colors", (isOpen || isCompleted) ? "text-primary" : "text-muted-foreground")} />}
+              {!Icon && 
+                <div className={cn(
+                  "flex items-center justify-center h-8 w-8 rounded-full border-2 text-lg font-semibold transition-colors", 
+                  (isOpen || isCompleted) ? "border-primary text-primary bg-primary/10" : "border-muted-foreground text-muted-foreground"
+                )}>
+                  {stepNumber}
+                </div>
+              }
+              <h4 className={cn("text-xl font-semibold text-left transition-colors", (isOpen || isCompleted) ? "text-primary" : "text-foreground")}>{step.title}</h4>
             </div>
             <div className="flex items-center space-x-2 ml-auto pl-4 flex-shrink-0">
               <Checkbox
@@ -71,7 +83,10 @@ export function WalkthroughStep({ step, isCompleted, onToggleComplete, stepNumbe
                 aria-label={`Mark step ${step.title} as complete`}
                 className={cn(isCompleted ? "border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground" : "")}
               />
-              <Label htmlFor={`step-checkbox-${step.id}`} className={cn("text-sm", isCompleted ? "text-primary" : "text-muted-foreground")}>
+              <Label 
+                htmlFor={`step-checkbox-${step.id}`} 
+                className={cn("text-sm transition-colors", (isOpen || isCompleted) ? "text-primary" : "text-muted-foreground")}
+              >
                 {isCompleted ? "Completed" : "Mark complete"}
               </Label>
             </div>
@@ -96,12 +111,12 @@ export function WalkthroughStep({ step, isCompleted, onToggleComplete, stepNumbe
                       defaultTitle = 'Warning!';
                       break;
                     case 'info':
-                      alertIcon = <Info className="h-5 w-5 text-primary" />;
+                      alertIcon = <Info className="h-5 w-5" />; // Icon color handled by cn below
                       alertVariant = 'default';
                       defaultTitle = 'Important Info';
                       break;
                     case 'note':
-                      alertIcon = <Lightbulb className="h-5 w-5 text-primary" />;
+                      alertIcon = <Lightbulb className="h-5 w-5" />; // Icon color handled by cn below
                       alertVariant = 'default';
                       defaultTitle = 'Quick Tip';
                       break;
@@ -139,4 +154,3 @@ export function WalkthroughStep({ step, isCompleted, onToggleComplete, stepNumbe
     </AccordionItem>
   );
 }
-

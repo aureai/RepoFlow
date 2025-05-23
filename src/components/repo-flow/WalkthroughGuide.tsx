@@ -182,6 +182,7 @@ export function WalkthroughGuide() {
               step={step}
               stepNumber={index + 1}
               isCompleted={!!completedSteps[step.id]}
+              isOpen={openAccordionItem === `step-${step.id}`}
               onToggleComplete={(id, completed) => {
                 handleToggleComplete(id, completed);
                 if (completed) {
