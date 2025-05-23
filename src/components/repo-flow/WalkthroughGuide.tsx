@@ -1,10 +1,9 @@
 
 "use client";
 
-import React, { useState, useEffect, useMemo } from 'react';
-import { Github, Cloud, Rocket, ArrowLeft, ArrowRight, TerminalSquareIcon } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ArrowLeft, ArrowRight, Github, Cloud, Rocket, TerminalSquareIcon } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
-import Image from 'next/image';
 import { WalkthroughStep, type StepContent } from './WalkthroughStep';
 import { Button } from '@/components/ui/button';
 
@@ -19,7 +18,6 @@ const initialSteps: StepContent[] = [
       <ul key="tools-list-step1" className="list-disc list-inside pl-4 my-2 space-y-1">
         <li><strong className="text-primary">Your Project's File Directory:</strong> Make sure you can see all the files and folders that make up your app.</li>
         <li><strong className="text-primary">Terminal (or Command Line):</strong> This is like a chat window where you'll type special instructions to your computer. You can usually open one from the 'View' or 'Terminal' menu in your code editor.</li>
-        <li><strong className="text-primary">Source Control (or Git Panel):</strong> This helps you keep track of changes to your code. It's often a tab or icon that looks like branching lines.</li>
       </ul>,
       "Great! Before we connect to GitHub, let's save your current app as a starting point. In the Terminal, type these commands one by one, pressing 'Enter' after each:",
     ],
@@ -95,7 +93,7 @@ const initialSteps: StepContent[] = [
 export function WalkthroughGuide() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [completedSteps, setCompletedSteps] = useState<Record<string, boolean>>({});
-  const [animationClass, setAnimationClass] = useState('animate-slide-in-from-right'); // Initial animation
+  const [animationClass, setAnimationClass] = useState('animate-slide-in-from-right');
 
   const totalSteps = initialSteps.length;
 
@@ -109,7 +107,7 @@ export function WalkthroughGuide() {
       setTimeout(() => {
         setCurrentStepIndex(prev => prev + 1);
         setAnimationClass('animate-slide-in-from-right');
-      }, 300); // Match exit animation duration
+      }, 300); 
     }
   };
 
@@ -119,52 +117,56 @@ export function WalkthroughGuide() {
       setTimeout(() => {
         setCurrentStepIndex(prev => prev - 1);
         setAnimationClass('animate-slide-in-from-left');
-      }, 300); // Match exit animation duration
+      }, 300); 
     }
   };
   
   const currentStepData = initialSteps[currentStepIndex];
 
   return (
-    <div className="flex flex-col items-center w-full">
-      <div className="w-full max-w-5xl relative"> {/* Parent for step and absolute buttons */}
-        <div className="w-full min-h-[600px] md:min-h-[700px] flex items-center justify-center relative overflow-hidden mb-8">
-          {/* Step Content - key change triggers animation */}
-          <div key={currentStepIndex} className={`w-full max-w-5xl min-h-[600px] md:min-h-[700px] flex items-center justify-center ${animationClass}`}>
-            <WalkthroughStep
-              step={currentStepData}
-              stepNumber={currentStepIndex + 1}
-              totalSteps={totalSteps}
-              isCompleted={!!completedSteps[currentStepData.id]}
-              onToggleComplete={handleToggleComplete}
-            />
-          </div>
+    // This outer div is the positioning context for the buttons.
+    // It will be constrained to max-w-5xl by its parent in page.tsx.
+    <div className="w-full relative">
+      {/* This div centers the step card content, making it narrower (max-w-4xl) 
+          than the button positioning context (max-w-5xl).
+          This leaves space on the sides for the buttons to appear "outside" the card.
+      */}
+      <div className="w-full max-w-4xl mx-auto min-h-[600px] md:min-h-[700px] flex items-center justify-center relative overflow-hidden mb-8">
+        {/* Step Content - key change triggers animation */}
+        <div key={currentStepIndex} className={`w-full h-full flex items-center justify-center ${animationClass}`}>
+          <WalkthroughStep
+            step={currentStepData}
+            stepNumber={currentStepIndex + 1}
+            totalSteps={totalSteps}
+            isCompleted={!!completedSteps[currentStepData.id]}
+            onToggleComplete={handleToggleComplete}
+          />
         </div>
-
-        {/* Navigation Buttons */}
-        {currentStepIndex > 0 && (
-          <Button
-            onClick={goToPrevStep}
-            variant="outline"
-            size="lg"
-            className="absolute left-0 sm:left-4 top-1/2 -translate-y-1/2 z-10 p-3"
-            aria-label="Previous Step"
-          >
-            <ArrowLeft className="h-6 w-6" />
-          </Button>
-        )}
-        {currentStepIndex < totalSteps - 1 && (
-          <Button
-            onClick={goToNextStep}
-            variant="default"
-            size="lg"
-            className="absolute right-0 sm:right-4 top-1/2 -translate-y-1/2 z-10 p-3"
-            aria-label="Next Step"
-          >
-            <ArrowRight className="h-6 w-6" />
-          </Button>
-        )}
       </div>
+
+      {/* Navigation Buttons */}
+      {currentStepIndex > 0 && (
+        <Button
+          onClick={goToPrevStep}
+          variant="outline"
+          size="lg"
+          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-3"
+          aria-label="Previous Step"
+        >
+          <ArrowLeft className="h-6 w-6" />
+        </Button>
+      )}
+      {currentStepIndex < totalSteps - 1 && (
+        <Button
+          onClick={goToNextStep}
+          variant="default"
+          size="lg"
+          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-3"
+          aria-label="Next Step"
+        >
+          <ArrowRight className="h-6 w-6" />
+        </Button>
+      )}
     </div>
   );
 }
