@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Github, GitBranch, Cloud, UploadCloud, Settings, CheckCircle, Package, Rocket, Link as LinkIcon } from 'lucide-react';
+import { Github, GitBranch, Cloud, UploadCloud, Settings, CheckCircle, Package, Rocket, Link as LinkIcon, Info } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { Accordion } from '@/components/ui/accordion';
 import { Progress } from '@/components/ui/progress';
@@ -14,6 +14,7 @@ const initialSteps: StepContent[] = [
     id: 'init-git',
     title: 'Initialize Git Repository',
     instructions: [
+      "This guide assumes you have a Next.js application (perhaps already using Firebase services) that you want to deploy.",
       "Open your project's root folder in your terminal.",
       "Run the command `git init` to initialize a new Git repository. This creates a hidden `.git` directory that tracks your project's history."
     ],
@@ -46,7 +47,7 @@ const initialSteps: StepContent[] = [
     instructions: [
       "Go to GitHub and log in.",
       "Click the `+` icon in the top right corner and select 'New repository'.",
-      "Give your repository a name (e.g., `my-awesome-app`). You can add an optional description.",
+      "Give your repository a name (e.g., `my-firebase-next-app`). You can add an optional description.",
       "Choose public or private. For deploying to Vercel, public or private works.",
     ],
     alerts: [
@@ -86,7 +87,7 @@ const initialSteps: StepContent[] = [
       {
         type: 'note',
         title: 'Branch Name Check',
-        message: "Your default branch might be named `main` (common now) or `master` (older default). Ensure you use the correct one for your repository. If you're unsure, GitHub will usually show the default branch name on the repository page after creation."
+        message: "Your default branch might be named `main` (common now) or `master` (older default). Ensure you use the correct one for your repository."
       }
     ],
     commands: ['git push -u origin main'],
@@ -106,24 +107,29 @@ const initialSteps: StepContent[] = [
     title: 'Import Project to Vercel',
     instructions: [
       "Once logged into Vercel, find the 'Add New...' button or 'Import Project' option on your dashboard.",
-      "Select your GitHub account and then choose the repository you just pushed.",
+      "Select your GitHub account and then choose the repository containing your Firebase Next.js project.",
       "Vercel will typically auto-detect that it's a Next.js project."
     ],
     Icon: Settings,
   },
   {
     id: 'vercel-deploy',
-    title: 'Configure and Deploy',
+    title: 'Configure and Deploy Next.js Frontend',
     instructions: [
-      "Vercel will show you project settings. For most Next.js apps, the defaults are fine.",
-      "You can set environment variables here if your application needs them (e.g., API keys).",
-      "Click the 'Deploy' button. Vercel will build your project and deploy it."
+      "Vercel will show you project settings. For most Next.js apps (including those using Firebase services on the backend), the defaults are often fine.",
+      "You can set environment variables here if your application needs them (e.g., Firebase client API keys and configuration for your Next.js app). These are typically prefixed with `NEXT_PUBLIC_` if used client-side.",
+      "Click the 'Deploy' button. Vercel will build your Next.js frontend and deploy it."
     ],
     alerts: [
        {
         type: 'info',
-        title: 'Deployment Process',
-        message: "After Vercel finishes building, it will assign your project a unique URL. You can monitor the build logs in real-time. Once deployed, you'll get a live link!"
+        title: 'Deployment Scope',
+        message: "Vercel will host your Next.js frontend. Your Firebase backend services (like Firestore, Authentication, Cloud Functions) continue to be managed through the Firebase console and are accessed by your frontend as configured."
+      },
+      {
+        type: 'note',
+        title: 'Live URL',
+        message: "After Vercel finishes building, it will assign your project a unique URL. You can monitor the build logs in real-time. Once deployed, you'll get a live link to your Next.js app!"
       }
     ],
     Icon: Rocket,
