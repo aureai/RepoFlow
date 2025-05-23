@@ -32,57 +32,78 @@ export function WalkthroughStep({ step, isCompleted, isOpen, onToggleComplete, s
   const { Icon } = step;
 
   const renderInstruction = (instruction: string) => {
-    // Regex to find URLs.
-    const urlRegex = /(\b(?:https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])|(\bwww\.[-A-Z0-9+&@#\/%=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])|(\b[A-Z0-9.-]+\.(?:com|org|net|edu|gov|mil|biz|info|mobi|name|aero|jobs|museum|coop|asia|cat|int|pro|tel|travel|xxx|io|app|dev)\b(?!(?:[^`]*`)|(?:[^<]*<\/code>)|[^\s]*\/))/gi;
-  
+    const keywordMap: Record<string, {url: string; displayText: string}> = {
+      'github': { url: 'https://github.com', displayText: 'GitHub' },
+      'github.com': { url: 'https://github.com', displayText: 'GitHub' },
+      'vercel': { url: 'https://vercel.com', displayText: 'Vercel' },
+      'vercel.com': { url: 'https://vercel.com', displayText: 'Vercel' },
+    };
+
+    // Regex to match keywords (case-insensitive, whole word)
+    // Ensure that keywords with dots (like github.com) are matched correctly by escaping the dot.
+    const escapedKeywords = Object.keys(keywordMap).map(k => k.replace('.', '\\.'));
+    const keywordRegex = new RegExp(`\\b(${escapedKeywords.join('|')})\\b`, 'gi');
+
     const parts = instruction.split(/(`[^`]+`)/g); // Split by code blocks first
-  
-    return parts.map((part, index) => {
-      if (index % 2 === 1) { // Content within backticks (code)
+
+    return parts.map((part, partIndex) => {
+      if (partIndex % 2 === 1) { // Content within backticks (code)
         return (
           <code
-            key={`code-${step.id}-${index}`}
+            key={`code-${step.id}-${partIndex}`}
             className="bg-muted px-1.5 py-0.5 rounded-sm font-mono text-sm text-accent shadow-sm border border-border/70"
           >
             {part.slice(1, -1)} {/* Remove backticks */}
           </code>
         );
       }
-      
-      // For non-code parts, search for URLs
+
+      // For non-code parts, search for keywords
+      const textSegments: React.ReactNode[] = [];
       let lastIndex = 0;
-      const elements: React.ReactNode[] = [];
       let match;
       
       // Create a new RegExp instance for each use of exec with the global flag
-      const localUrlRegex = new RegExp(urlRegex); 
-      while ((match = localUrlRegex.exec(part)) !== null) {
-        // Add text before the URL
+      const localKeywordRegex = new RegExp(keywordRegex); 
+      while ((match = localKeywordRegex.exec(part)) !== null) {
+        const matchedKeyword = match[0].toLowerCase();
+        const keywordConfig = keywordMap[matchedKeyword];
+
+        // Add text before the keyword
         if (match.index > lastIndex) {
-          elements.push(<React.Fragment key={`text-${step.id}-${index}-${lastIndex}`}>{part.substring(lastIndex, match.index)}</React.Fragment>);
+          textSegments.push(part.substring(lastIndex, match.index));
         }
-        // Add the URL as a link
-        const url = match[0];
-        const href = url.startsWith('http') || url.startsWith('ftp') || url.startsWith('file') ? url : `https://${url}`;
-        elements.push(
-          <a
-            key={`link-${step.id}-${index}-${match.index}`}
-            href={href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-primary underline hover:text-primary/80"
-          >
-            {url}
-          </a>
-        );
-        lastIndex = localUrlRegex.lastIndex;
-      }
-      // Add any remaining text after the last URL
-      if (lastIndex < part.length) {
-        elements.push(<React.Fragment key={`text-final-${step.id}-${index}-${lastIndex}`}>{part.substring(lastIndex)}</React.Fragment>);
+
+        // Add the keyword as a link
+        if (keywordConfig) {
+          textSegments.push(
+            <a
+              key={`link-${step.id}-${partIndex}-${match.index}`}
+              href={keywordConfig.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary underline hover:text-primary/80"
+            >
+              {keywordConfig.displayText}
+            </a>
+          );
+        } else {
+          // This case should ideally not be hit if the regex and map are correct
+          textSegments.push(match[0]); 
+        }
+        lastIndex = localKeywordRegex.lastIndex;
       }
       
-      return elements.length > 0 ? elements : <React.Fragment key={`empty-${step.id}-${index}`}>{part}</React.Fragment>;
+      // Add any remaining text after the last keyword
+      if (lastIndex < part.length) {
+        textSegments.push(part.substring(lastIndex));
+      }
+      
+      return textSegments.map((segment, segmentIndex) => (
+        <React.Fragment key={`segment-${step.id}-${partIndex}-${segmentIndex}`}>
+          {segment}
+        </React.Fragment>
+      ));
     });
   };
 
@@ -199,3 +220,4 @@ export function WalkthroughStep({ step, isCompleted, isOpen, onToggleComplete, s
     </AccordionItem>
   );
 }
+
