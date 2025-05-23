@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Github, GitBranch, Cloud, UploadCloud, Settings, CheckCircle, Package, Rocket, Link as LinkIcon, Info } from 'lucide-react';
+import { Github, GitBranch, Cloud, UploadCloud, Settings, CheckCircle, Package, Rocket, Link as LinkIcon, Info, Lightbulb, AlertTriangle } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { Accordion } from '@/components/ui/accordion';
 import { Progress } from '@/components/ui/progress';
@@ -14,8 +14,8 @@ const initialSteps: StepContent[] = [
     id: 'init-git',
     title: 'Initialize Git Repository',
     instructions: [
-      "This guide starts once you have the Next.js code for your Firebase project's frontend. You might have generated this code using a Firebase tool or set it up manually. These steps focus on taking that code to a live deployment.",
-      "Open your project's root folder in your terminal.",
+      "This guide is for when you're working with the **code** of your Next.js frontend, especially if you've started with a Firebase tool and are now ready to manage your project files directly. If you were using a visual prototyper, ensure you've switched to a 'Code view' or have access to your project's file directory before starting these terminal commands.",
+      "Open your project's root folder in your local terminal (this might be within your code editor like VS Code, or a separate terminal window).",
       "Run the command `git init` to initialize a new Git repository. This creates a hidden `.git` directory that tracks your project's history."
     ],
     commands: ['git init'],
