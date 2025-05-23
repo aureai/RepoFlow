@@ -8,31 +8,78 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { AlertTriangle, Info, Lightbulb, Copy, Check } from 'lucide-react';
+import { AlertTriangle, Info, Lightbulb, Copy, Check as CheckIcon } from 'lucide-react'; // Renamed Check to CheckIcon
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 
+export interface StepAlert {
+  type: 'warning' | 'info' | 'note';
+  title?: string; // Title is now pre-selected for language
+  Icon?: LucideIcon;
+  message: React.ReactNode; // Message is now pre-selected for language
+}
+
 export interface StepContent {
   id: string;
-  title: string;
-  instructions: React.ReactNode[];
+  title: string; // Title is now pre-selected for language
+  instructions: React.ReactNode[]; // Instructions are now pre-selected for language
   Icon?: LucideIcon;
   commands?: string[];
-  alerts?: { type: 'warning' | 'info' | 'note'; title?: string; Icon?: LucideIcon; message: React.ReactNode }[];
+  alerts?: StepAlert[];
 }
 
 interface WalkthroughStepProps {
   step: StepContent;
+  currentLanguage: 'en' | 'es';
   isCompleted: boolean;
   onToggleComplete: (id: string, completed: boolean) => void;
   stepNumber: number;
   totalSteps: number;
 }
 
-export function WalkthroughStep({ step, isCompleted, onToggleComplete, stepNumber }: WalkthroughStepProps) {
-  const { Icon: StepIconComponent } = step; // Renamed to avoid conflict with LucideIcon type
+const uiTextGenerators: Record<'en' | 'es', {
+  markComplete: () => string;
+  completed: () => string;
+  exampleCommands: () => string;
+  copy: () => string;
+  copied: () => string;
+  copySuccessTitle: () => string;
+  copySuccessDesc: () => string;
+  copyFailTitle: () => string;
+  copyFailDesc: () => string;
+}> = {
+  en: {
+    markComplete: () => "Mark as complete",
+    completed: () => "Completed!",
+    exampleCommands: () => "Example Command(s):",
+    copy: () => "Copy",
+    copied: () => "Copied!",
+    copySuccessTitle: () => "Copied!",
+    copySuccessDesc: () => "Command copied to clipboard.",
+    copyFailTitle: () => "Copy Failed",
+    copyFailDesc: () => "Could not copy command to clipboard.",
+  },
+  es: {
+    markComplete: () => "Marcar como completo",
+    completed: () => "¡Completado!",
+    exampleCommands: () => "Comando(s) de Ejemplo:",
+    copy: () => "Copiar",
+    copied: () => "¡Copiado!",
+    copySuccessTitle: () => "¡Copiado!",
+    copySuccessDesc: () => "Comando copiado al portapapeles.",
+    copyFailTitle: () => "Error al Copiar",
+    copyFailDesc: () => "No se pudo copiar el comando.",
+  }
+};
+
+
+export function WalkthroughStep({ step, currentLanguage, isCompleted, onToggleComplete, stepNumber }: WalkthroughStepProps) {
+  const { Icon: StepIconComponent } = step;
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
+  const cardRef = React.useRef<HTMLDivElement>(null);
+
+  const currentUiText = uiTextGenerators[currentLanguage];
 
   useEffect(() => {
     setCopied(false);
@@ -44,30 +91,30 @@ export function WalkthroughStep({ step, isCompleted, onToggleComplete, stepNumbe
     navigator.clipboard.writeText(commandText).then(() => {
       setCopied(true);
       toast({
-        title: "Copied!",
-        description: "Command copied to clipboard.",
+        title: currentUiText.copySuccessTitle(),
+        description: currentUiText.copySuccessDesc(),
       });
       setTimeout(() => setCopied(false), 2000);
     }).catch(err => {
       console.error('Failed to copy: ', err);
       toast({
         variant: "destructive",
-        title: "Copy Failed",
-        description: "Could not copy command to clipboard.",
+        title: currentUiText.copyFailTitle(),
+        description: currentUiText.copyFailDesc(),
       });
     });
   };
 
   const renderInstructionPart = (part: React.ReactNode, partKey: string | number): React.ReactNode => {
     if (typeof part !== 'string') {
-      return part;
+      return part; // It's already a ReactNode (e.g., a Fragment with a <strong> tag)
     }
     
     const keywordMap: Record<string, {url: string; displayText: string}> = {
       'github': { url: 'https://github.com', displayText: 'GitHub' },
-      'github.com': { url: 'https://github.com', displayText: 'GitHub' }, // GitHub.com also maps to GitHub
+      'github.com': { url: 'https://github.com', displayText: 'GitHub' },
       'vercel': { url: 'https://vercel.com', displayText: 'Vercel' },
-      'vercel.com': { url: 'https://vercel.com', displayText: 'Vercel' }, // Vercel.com also maps to Vercel
+      'vercel.com': { url: 'https://vercel.com', displayText: 'Vercel' },
     };
 
     const escapedKeywords = Object.keys(keywordMap).map(k => k.replace('.', '\\.'));
@@ -94,7 +141,7 @@ export function WalkthroughStep({ step, isCompleted, onToggleComplete, stepNumbe
       const localKeywordRegex = new RegExp(keywordRegex); 
       while ((match = localKeywordRegex.exec(segment)) !== null) {
         const matchedKeyword = match[0].toLowerCase();
-        const keywordConfig = keywordMap[matchedKeyword] || keywordMap[match[0]]; // Check both lowercase and original
+        const keywordConfig = keywordMap[matchedKeyword] || keywordMap[match[0]]; 
 
         if (match.index > lastIndex) {
           textNodes.push(segment.substring(lastIndex, match.index));
@@ -132,10 +179,11 @@ export function WalkthroughStep({ step, isCompleted, onToggleComplete, stepNumbe
 
   return (
     <Card 
+      ref={cardRef}
       className={cn(
         "shadow-2xl border-primary/30 ring-1 ring-primary/20",
         "bg-card/80 backdrop-blur-md", 
-        "h-full flex flex-col" 
+        "h-full flex flex-col",
       )}
     >
       <CardHeader className="pb-4">
@@ -151,9 +199,9 @@ export function WalkthroughStep({ step, isCompleted, onToggleComplete, stepNumbe
       </CardHeader>
       <CardContent className="flex-grow overflow-y-auto space-y-4">
         {step.instructions.map((instrNode, index) => (
-            <p key={index} className="leading-relaxed text-foreground/90">
-              {renderInstructionPart(instrNode, index)}
-            </p>
+            <div key={index} className="leading-relaxed text-foreground/90">
+              {typeof instrNode === 'string' ? renderInstructionPart(instrNode, index) : instrNode}
+            </div>
         ))}
 
         {step.alerts && step.alerts.length > 0 && (
@@ -166,22 +214,22 @@ export function WalkthroughStep({ step, isCompleted, onToggleComplete, stepNumbe
                 case 'warning':
                   alertIconElement = AlertIconComponent ? <AlertIconComponent className="h-5 w-5" /> : <AlertTriangle className="h-5 w-5" />;
                   alertVariant = 'destructive';
-                  defaultTitle = 'Warning!';
+                  defaultTitle = currentLanguage === 'es' ? '¡Advertencia!' : 'Warning!';
                   break;
                 case 'info':
                   alertIconElement = AlertIconComponent ? <AlertIconComponent className="h-5 w-5" /> : <Info className="h-5 w-5" />; 
                   alertVariant = 'default';
-                  defaultTitle = 'Important Info';
+                  defaultTitle = currentLanguage === 'es' ? 'Información Importante' : 'Important Info';
                   break;
                 case 'note':
                   alertIconElement = AlertIconComponent ? <AlertIconComponent className="h-5 w-5" /> : <Lightbulb className="h-5 w-5" />; 
                   alertVariant = 'default';
-                  defaultTitle = 'Quick Tip';
+                  defaultTitle = currentLanguage === 'es' ? 'Consejo Rápido' : 'Quick Tip';
                   break;
                 default:
                   alertIconElement = <Info className="h-5 w-5" />;
                   alertVariant = 'default';
-                  defaultTitle = 'Note';
+                  defaultTitle = currentLanguage === 'es' ? 'Nota' : 'Note';
               }
               return (
                 <Alert key={index} variant={alertVariant} className={cn(alert.type === 'info' || alert.type === 'note' ? "border-primary/30 bg-primary/10" : "")}>
@@ -199,7 +247,7 @@ export function WalkthroughStep({ step, isCompleted, onToggleComplete, stepNumbe
         {step.commands && step.commands.length > 0 && (
           <div className="mt-6">
             <div className="flex justify-between items-center mb-2">
-              <h5 className="font-medium text-foreground">Example Command(s):</h5>
+              <h5 className="font-medium text-foreground">{currentUiText.exampleCommands()}</h5>
               <Button
                 variant="ghost"
                 size="sm"
@@ -209,13 +257,13 @@ export function WalkthroughStep({ step, isCompleted, onToggleComplete, stepNumbe
               >
                 {copied ? (
                   <>
-                    <Check className="mr-2 h-4 w-4 text-green-500" />
-                    Copied!
+                    <CheckIcon className="mr-2 h-4 w-4 text-green-500" />
+                    {currentUiText.copied()}
                   </>
                 ) : (
                   <>
                     <Copy className="mr-2 h-4 w-4" />
-                    Copy
+                    {currentUiText.copy()}
                   </>
                 )}
               </Button>
@@ -241,7 +289,7 @@ export function WalkthroughStep({ step, isCompleted, onToggleComplete, stepNumbe
             htmlFor={`step-checkbox-${step.id}`} 
             className={cn("text-sm", isCompleted ? "text-primary" : "text-muted-foreground")}
           >
-            {isCompleted ? "Completed!" : "Mark as complete"}
+            {isCompleted ? currentUiText.completed() : currentUiText.markComplete()}
           </Label>
         </div>
       </CardFooter>
