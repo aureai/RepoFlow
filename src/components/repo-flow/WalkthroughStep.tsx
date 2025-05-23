@@ -111,7 +111,7 @@ export function WalkthroughStep({ step, isCompleted, onToggleComplete, stepNumbe
                       defaultTitle = 'Note';
                   }
                   return (
-                    <Alert key={index} variant={alertVariant} className={cn(alert.type === 'info' || alert.type === 'note' ? "border-primary/30 bg-primary/5" : "")}>
+                    <Alert key={index} variant={alertVariant} className={cn(alert.type === 'info' || alert.type === 'note' ? "border-primary/30 bg-primary/10" : "")}>
                       {React.cloneElement(alertIcon, { className: cn(alertIcon.props.className, alert.type === 'warning' ? "" : "text-primary") })}
                       <AlertTitle className={cn(alert.type === 'warning' ? "" : "text-primary/90")}>{alert.title || defaultTitle}</AlertTitle>
                       <AlertDescription className={cn(alert.type === 'warning' ? "" : "text-foreground/80")}>
@@ -139,3 +139,4 @@ export function WalkthroughStep({ step, isCompleted, onToggleComplete, stepNumbe
     </AccordionItem>
   );
 }
+
