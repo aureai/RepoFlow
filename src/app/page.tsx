@@ -12,7 +12,7 @@ export default function HomePage() {
       <Header />
       <main className="flex-grow container mx-auto px-4 py-8 md:py-12">
         <MouseGlowEffect className="rounded-lg">
-          <section className="text-center mb-12 md:mb-16">
+          <section className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-extrabold text-foreground mb-4">
               RepoFlow: Your Guide to Publishing Your Firebase App
             </h2>
