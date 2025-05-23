@@ -170,7 +170,8 @@ export function WalkthroughStep({ step, isCompleted, onToggleComplete, stepNumbe
       ref={cardRef}
       className={cn(
         "shadow-2xl border-primary/30 ring-1 ring-primary/20 transition-transform duration-100 ease-linear",
-        "bg-card/80 backdrop-blur-md" // Frosted glass effect
+        "bg-card/80 backdrop-blur-md", // Frosted glass effect
+        "h-full flex flex-col" // Ensure card fills height and lays out content vertically
       )}
       style={{ transformStyle: "preserve-3d", willChange: 'transform' }} // Added willChange for performance
     >
@@ -185,7 +186,7 @@ export function WalkthroughStep({ step, isCompleted, onToggleComplete, stepNumbe
           <CardTitle className="text-3xl font-bold text-primary">{step.title}</CardTitle>
         </div>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="flex-grow overflow-y-auto space-y-4">
         {step.instructions.map((instrNode, index) => (
           <div key={index} className="flex items-start">
             <ChevronRight className="h-5 w-5 mr-2 mt-[3px] flex-shrink-0 text-primary" />
