@@ -1,9 +1,8 @@
 
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { ArrowLeft, ArrowRight, Github, Cloud, Rocket, TerminalSquareIcon, GitCommit } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowLeft, ArrowRight, TerminalSquareIcon, Github, Rocket } from 'lucide-react';
 import { WalkthroughStep, type StepContent } from './WalkthroughStep';
 import { Button } from '@/components/ui/button';
 
@@ -30,7 +29,11 @@ const initialSteps: StepContent[] = [
       {
         type: 'info',
         title: "Command Explanations:",
-        message: <><code>git init</code>: Initializes Git for this project. (Run once per project).<br/><code>git add .</code>: Stages all current project files for saving.<br/><code>git commit -m "..."</code>: Saves a snapshot of your files with a descriptive message.</>
+        message: <>
+          <code className="bg-muted px-1.5 py-0.5 rounded-sm font-mono text-sm text-accent shadow-sm border border-border/70">git init</code>: Initializes Git for this project. (Run once per project).<br/>
+          <code className="bg-muted px-1.5 py-0.5 rounded-sm font-mono text-sm text-accent shadow-sm border border-border/70">git add .</code>: Stages all current project files for saving.<br/>
+          <code className="bg-muted px-1.5 py-0.5 rounded-sm font-mono text-sm text-accent shadow-sm border border-border/70">git commit -m "..."</code>: Saves a snapshot of your files with a descriptive message.
+        </>
       }
     ]
   },
@@ -125,8 +128,8 @@ export function WalkthroughGuide() {
 
   return (
     <div className="w-full relative">
-      <div className="w-full max-w-4xl mx-auto min-h-[600px] md:min-h-[700px] flex items-center justify-center relative overflow-hidden mb-8">
-        <div key={currentStepIndex} className={`w-full h-full flex items-center justify-center ${animationClass}`}>
+      <div className="w-full max-w-5xl mx-auto min-h-[600px] md:min-h-[700px] flex items-center justify-center relative overflow-hidden mb-8">
+        <div key={currentStepIndex} className={`w-full max-w-4xl mx-auto h-full flex items-center justify-center ${animationClass}`}>
           <WalkthroughStep
             step={currentStepData}
             stepNumber={currentStepIndex + 1}

@@ -34,11 +34,11 @@ const faqData = [
     Icon: RefreshCw,
     answer: [
       "This is one of the best parts about using GitHub and Vercel together! Once you've set up your project and deployed it for the first time, updating it is very straightforward:",
-      "1. **Make changes to your code:** Edit your project files (in Code View) or your preferred code editor.",
-      "2. **Save your changes with Git (locally):** Just like you did during the initial setup, you need to tell Git about your new changes. Open your Terminal and type these commands:",
+      "1. <strong>Make changes to your code:</strong> Edit your project files (in Code View) or your preferred code editor.",
+      "2. <strong>Save your changes with Git (locally):</strong> Just like you did during the initial setup, you need to tell Git about your new changes. Open your Terminal and type these commands:",
       "<ul class='list-disc list-inside pl-4 my-2 space-y-1'><li><code>git add .</code> (This gets all changed files ready to be saved. You can also do <code>git add &lt;specific_file_name&gt;</code> if you only want to save certain files.)</li><li><code>git commit -m \"Your clear message about what you updated\"</code> (This saves a snapshot of your changes with a descriptive message. For example, <code>git commit -m \"Updated the homepage text\"</code>)</li></ul>",
-      "3. **Send your changes to GitHub:** Type this command in your Terminal: <code>git push origin main</code> (If your main branch has a different name, like <code>master</code>, use that instead of <code>main</code>).",
-      "4. **Vercel takes over!** Vercel automatically watches your GitHub repository. When it sees your new 'push', it will start a new build and deployment process. Within a few minutes, your live website will be updated with your changes.",
+      "3. <strong>Send your changes to GitHub:</strong> Type this command in your Terminal: <code>git push origin main</code> (If your main branch has a different name, like <code>master</code>, use that instead of <code>main</code>).",
+      "4. <strong>Vercel takes over!</strong> Vercel automatically watches your GitHub repository. When it sees your new 'push', it will start a new build and deployment process. Within a few minutes, your live website will be updated with your changes.",
       "You typically don't need to do anything directly on the Vercel website for updates after the initial setup. Just keep your GitHub repository updated, and Vercel handles the rest!"
     ],
   },
