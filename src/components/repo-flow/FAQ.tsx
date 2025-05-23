@@ -14,7 +14,7 @@ const faqData = [
       "Think of GitHub as a super-powered online backup and collaboration hub for your code. It's like a special kind of cloud storage designed specifically for software projects.",
       "It uses a system called 'Git' to keep track of every change you make to your project, creating a history of versions. This means you can always go back to an older version if something goes wrong.",
       "You can share your code with others, work on projects together, and see who changed what and when. It's like 'Google Docs' for code, but much more powerful for developers.",
-      "In this guide, we use GitHub to store your Next.js app's code so that Vercel (our deployment platform) can access it and put your website online."
+      "In this guide, we use GitHub to store your app's code so that Vercel (our deployment platform) can access it and put your website online."
     ],
   },
   {
@@ -22,9 +22,9 @@ const faqData = [
     question: "What is Vercel?",
     Icon: ArrowUpCircle,
     answer: [
-      "Vercel is a platform that makes your Next.js website (the 'frontend' part of your app) live on the internet incredibly easily. It's built by the same people who created Next.js, so it's highly optimized for it.",
+      "Vercel is a platform that makes your website (often a Next.js application, which is a popular way to build the 'frontend' or visual part of your app) live on the internet incredibly easily. For Next.js apps, it's especially powerful because Vercel is made by the same creators.",
       "It takes your code (from your GitHub repository, in our case) and 'builds' it into a working website that anyone can visit using a web address (URL).",
-      "Vercel handles all the complicated server stuff, deployment processes, and scaling, so you don't have to worry about managing infrastructure. It makes your Next.js app run fast and efficiently.",
+      "Vercel handles all the complicated server stuff, deployment processes, and scaling, so you don't have to worry about managing infrastructure. It makes your website run fast and efficiently.",
       "A key feature is that Vercel can automatically update your live website whenever you update your code on GitHub, which is super handy!"
     ],
   },
