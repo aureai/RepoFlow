@@ -66,18 +66,6 @@ const initialSteps: StepContent[] = [
     ],
     alerts: [
       {
-        type: 'warning',
-        Icon: AlertTriangle,
-        title: 'CRITICAL: DO NOT SHARE YOUR API KEYS OR SECRETS!',
-        message: "Before you push your code, double-check your project files. Make absolutely sure you are NOT uploading any API keys, passwords, or other sensitive information. Check your `.gitignore` file (it's in your project's main folder) to ensure files or folders containing secrets are listed there. If they aren't, add them! This is very important to keep your app and accounts secure."
-      },
-      {
-        type: 'warning',
-        Icon: AlertTriangle,
-        title: 'IMPORTANT: Keep Your Repo Empty on GitHub!',
-        message: "When creating the new repository on GitHub, do NOT check any boxes to add a README, .gitignore, or license. Your project already has these files. You need an empty canvas on GitHub for this step."
-      },
-      {
         type: 'info',
         Icon: Info,
         title: "Logging into GitHub",
@@ -90,7 +78,7 @@ const initialSteps: StepContent[] = [
               It might open a browser window for you to log in and authorize.
             </li>
             <li>
-              Sometimes, especially if you're using a code editor like the one in Firebase, look out for a pop-up! This pop-up (often appearing in the <strong className="text-primary">bottom-right corner of your code viewport</strong>) might show you a short code (like{' '}
+              Sometimes, especially if you&apos;re using a code editor like the one in Firebase, look out for a pop-up! This pop-up (often appearing in the <strong className="text-primary">bottom-right corner of your code viewport</strong>) might show you a short code (like{' '}
               <code>XXXX-XXXX</code>). It will also tell you to open a specific GitHub webpage (like{' '}
               <code>github.com/login/device</code>) in your browser and enter that code there. Your <strong className="text-primary">Terminal</strong> might also display similar instructions or the code.
             </li>
@@ -103,6 +91,18 @@ const initialSteps: StepContent[] = [
           Don&apos;t worry, just follow the prompts that appear. This is a standard security step to make
           sure your code is uploaded safely!
         </>
+      },
+      {
+        type: 'warning',
+        Icon: AlertTriangle,
+        title: 'CRITICAL: DO NOT SHARE YOUR API KEYS OR SECRETS!',
+        message: "Before you push your code, double-check your project files. Make absolutely sure you are NOT uploading any API keys, passwords, or other sensitive information. Check your `.gitignore` file (it's in your project's main folder) to ensure files or folders containing secrets are listed there. If they aren't, add them! This is very important to keep your app and accounts secure."
+      },
+      {
+        type: 'warning',
+        Icon: AlertTriangle,
+        title: 'IMPORTANT: Keep Your Repo Empty on GitHub!',
+        message: "When creating the new repository on GitHub, do NOT check any boxes to add a README, .gitignore, or license. Your project already has these files. You need an empty canvas on GitHub for this step."
       }
     ],
   },
@@ -204,3 +204,4 @@ export function WalkthroughGuide() {
     </div>
   );
 }
+
