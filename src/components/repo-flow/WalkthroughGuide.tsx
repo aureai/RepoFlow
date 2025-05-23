@@ -16,8 +16,8 @@ const initialSteps: StepContent[] = [
     title: 'Switch to Code & Open Your Tools',
     Icon: MonitorPlay,
     instructions: [
-      "First, if you're in a Firebase visual tool, find the 'Switch to Code' button (often an icon, maybe in the top-right of your screen). This guide is for when you can see all your project's files and folders.",
-      "In your code editor (like Firebase Studio, shown below), you need to open two things:",
+      "Now that you're in your project's 'Code View' (seeing all the files and folders), the next step is to open your coding tools.",
+      "In your code editor (like Firebase Studio, often shown when you switch to Code View), you need to open two key things:",
       <ul key="tools-list" className="list-disc list-inside pl-4 my-2 space-y-1">
         <li><strong className="text-primary">Terminal:</strong> Where you'll type commands.</li>
         <li><strong className="text-primary">Source Control:</strong> Where you can see file changes.</li>

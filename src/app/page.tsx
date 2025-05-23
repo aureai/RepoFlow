@@ -17,7 +17,7 @@ export default function HomePage() {
               Firebase Code to Live App: The Simple Way!
             </h2>
             <p className="text-lg md:text-xl text-foreground/80 max-w-3xl mx-auto">
-              Welcome to RepoFlow! If you're using a Firebase visual tool (like the Prototyper), the very <strong className="text-primary">first thing to do is switch to 'Code View'</strong>. Look for an icon, maybe in the top right. This guide helps you <strong className="text-primary">after</strong> you see your project's files and folders. We'll get your web app (likely built with Next.js, a modern web technology) on GitHub and live with Vercel, step-by-step.
+              Welcome to RepoFlow! Using a Firebase visual tool (like Prototyper)? Great! The <strong className="text-primary">first step is to switch to 'Code View'</strong> in that tool (look for an icon, maybe top-right). This guide helps you <strong className="text-primary">right after that</strong> – once you see your project's files and folders. We'll walk you through getting your web app (likely Next.js) onto GitHub and live with Vercel.
             </p>
           </section>
 
