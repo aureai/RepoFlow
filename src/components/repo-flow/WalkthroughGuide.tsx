@@ -46,7 +46,9 @@ const initialSteps: StepContent[] = [
       "If you don't have a GitHub account, create one. Then, on GitHub, click 'New repository'.",
       "Give your repository a name (like `my-cool-app`). You can choose if it's public (anyone can see) or private (only you and people you invite). A description is optional.",
       "After creating the repository, GitHub will show you some instructions. Look for the section that says '…or push an existing repository from the command line'.",
-      "GitHub will give you a few commands. They'll look something like this (but use <strong class='text-primary'>YOUR actual GitHub username and repository name</strong> from the page!):",
+      "GitHub will give you a few commands. They'll look something like this (but use ",
+      <strong key="gh-username-repo" className='text-primary'>YOUR actual GitHub username and repository name</strong>,
+      " from the page!):",
     ],
     commands: [
       'git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPOSITORY_NAME.git',
@@ -142,6 +144,7 @@ export function WalkthroughGuide() {
             totalSteps={totalSteps}
             isCompleted={!!completedSteps[currentStepData.id]}
             onToggleComplete={handleToggleComplete}
+            isOpen={true} 
           />
         </div>
       </div>
