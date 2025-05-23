@@ -14,10 +14,10 @@ export default function HomePage() {
         <MouseGlowEffect className="rounded-lg">
           <section className="text-center mb-12 md:mb-16">
             <h2 className="text-4xl md:text-5xl font-extrabold text-foreground mb-4">
-              Firebase Code to Live App: The Simple Way!
+              RepoFlow: Your Guide to Publishing Your Firebase App
             </h2>
             <p className="text-lg md:text-xl text-foreground/80 max-w-3xl mx-auto">
-              Welcome to RepoFlow! So, you've been using a Firebase visual tool (like Prototyper) to build your app? Awesome! The very first thing to do is hop over to <strong className="text-primary">'Code View'</strong> in that tool. You'll usually find an icon for this, often in the top-right corner. This guide is your next step, kicking in once you can see all your project's files and folders. We'll smoothly guide you through getting your web app (it's probably a Next.js one!) onto GitHub and then live on the internet with Vercel.
+              Built your app with a Firebase visual tool? First, switch to <strong className="text-primary">'Code View'</strong> (often an icon in the top-right). RepoFlow then guides you to get your Next.js app onto GitHub and live with Vercel.
             </p>
           </section>
 

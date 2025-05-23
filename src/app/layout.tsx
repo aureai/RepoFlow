@@ -6,7 +6,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/theme-provider';
 
 export const metadata: Metadata = {
-  title: 'RepoFlow: Deploy Firebase Next.js Apps to Vercel',
+  title: 'RepoFlow: Guide to Publishing Your Firebase App',
   description: 'Guided walkthrough for Firebase developers: link your Next.js app to GitHub and deploy with Vercel.',
 };
 
