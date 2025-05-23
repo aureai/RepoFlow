@@ -1,10 +1,9 @@
 
 "use client";
 
-import Image from 'next/image';
 import type { LucideIcon } from 'lucide-react';
 import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from '@/components/ui/card'; // Removed CardContent, CardDescription, CardHeader, CardTitle as they are not directly used here
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
@@ -13,11 +12,6 @@ export interface StepContent {
   id: string;
   title: string;
   instructions: string[];
-  diagramUrl?: string;
-  diagramAlt?: string;
-  diagramHint?: string;
-  diagramWidth?: number;
-  diagramHeight?: number;
   commands?: string[];
   Icon?: LucideIcon;
 }
@@ -66,27 +60,14 @@ export function WalkthroughStep({ step, isCompleted, onToggleComplete, stepNumbe
               <p key={index} className="text-muted-foreground leading-relaxed">{instr}</p>
             ))}
 
-            {step.diagramUrl && step.diagramWidth && step.diagramHeight && (
-              <div className="my-4 p-4 border rounded-lg bg-secondary/30 flex justify-center items-center">
-                <Image
-                  src={step.diagramUrl}
-                  alt={step.diagramAlt || `Diagram for ${step.title}`}
-                  width={step.diagramWidth}
-                  height={step.diagramHeight}
-                  className="rounded-md object-contain max-h-[300px]"
-                  data-ai-hint={step.diagramHint || "process diagram"}
-                />
-              </div>
-            )}
-
             {step.commands && step.commands.length > 0 && (
               <div className="mt-4">
-                <h5 className="font-medium text-foreground mb-2">Example Commands:</h5>
-                <div className="bg-muted p-3 rounded-md space-y-1">
-                  {step.commands.map((cmd, index) => (
-                    <code key={index} className="block text-sm font-mono text-muted-foreground break-all">{cmd}</code>
-                  ))}
-                </div>
+                <h5 className="font-medium text-foreground mb-2">Example Command(s):</h5>
+                <pre className="bg-black text-green-400 p-4 rounded-md overflow-x-auto">
+                  <code className="text-sm font-mono whitespace-pre-wrap">
+                    {step.commands.join('\n')}
+                  </code>
+                </pre>
               </div>
             )}
           </div>

@@ -18,11 +18,6 @@ const initialSteps: StepContent[] = [
     ],
     commands: ['git init'],
     Icon: GitBranch,
-    diagramUrl: 'https://placehold.co/600x200.png',
-    diagramAlt: 'Terminal showing git init command',
-    diagramHint: 'terminal command',
-    diagramWidth: 600,
-    diagramHeight: 200,
   },
   {
     id: 'add-files',
@@ -55,11 +50,6 @@ const initialSteps: StepContent[] = [
       "IMPORTANT: Do NOT initialize this repository with a README, .gitignore, or license file if you've already initialized Git locally. You'll push your local files."
     ],
     Icon: Github,
-    diagramUrl: 'https://placehold.co/600x350.png',
-    diagramAlt: 'GitHub new repository page',
-    diagramHint: 'github interface',
-    diagramWidth: 600,
-    diagramHeight: 350,
   },
   {
     id: 'link-remote',
@@ -99,11 +89,6 @@ const initialSteps: StepContent[] = [
       "Vercel will typically auto-detect that it's a Next.js project."
     ],
     Icon: Settings,
-    diagramUrl: 'https://placehold.co/600x300.png',
-    diagramAlt: 'Vercel import project screen',
-    diagramHint: 'vercel dashboard',
-    diagramWidth: 600,
-    diagramHeight: 300,
   },
   {
     id: 'vercel-deploy',
