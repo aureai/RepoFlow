@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, TerminalSquareIcon, Github, Rocket, AlertTriangle, Info, Lightbulb } from 'lucide-react';
-import { WalkthroughStep, type StepContent } from './WalkthroughStep'; 
+import { WalkthroughStep, type StepContent } from './WalkthroughStep';
 import { cn } from '@/lib/utils';
 
 const initialSteps: StepContent[] = [
@@ -14,7 +14,7 @@ const initialSteps: StepContent[] = [
     Icon: TerminalSquareIcon,
     instructions: [
       <>First up! If you were using a visual tool, make sure you've switched to '<strong key="code-view-step1" className="text-primary">Code View</strong>' (look for an icon, often in the top-right!). This guide is for when you can see all your project's files.</>,
-      <>In your code editor, open the <strong className="text-primary">Terminal (Command Line)</strong> and have your <strong className="text-primary">Project's File Directory</strong> visible.</>,
+      <>In your code editor (like the one in Firebase's <strong className="text-primary">Code View</strong>), open the <strong className="text-primary">Terminal (Command Line)</strong> and have your <strong className="text-primary">Project's File Directory</strong> visible. You'll often find the Terminal at the bottom of the code editor screen.</>,
       <>Time to save your app's current version. In your <strong className="text-primary">Terminal</strong>, type these commands one by one, pressing Enter after each:</>,
     ],
     commands: [
@@ -38,7 +38,7 @@ const initialSteps: StepContent[] = [
         Icon: Lightbulb,
         title: "Pro Tip:",
         message: <>
-          Keep your Firebase visual prototyper open in one browser tab and your code editor (like the one in Firebase Studio&apos;s <strong className="text-primary">Code View</strong>) in another. This makes it easier to see your visual design and apply changes to the code. If you have questions about the code, remember you can often chat with AI assistants (like Gemini) directly within your code editor!
+          Keep your Firebase visual prototyper open in one browser tab and your code editor (like the one in Firebase's <strong className="text-primary">Code View</strong>) in another. This makes it easier to see your visual design and apply changes to the code. If you have questions about the code, remember you can often chat with AI assistants (like Gemini) directly within your code editor!
         </>
       }
     ]
@@ -90,9 +90,9 @@ const initialSteps: StepContent[] = [
               It might open a browser window for you to log in and authorize.
             </li>
             <li>
-              Sometimes, your <strong className="text-primary">Terminal</strong> might show you a short code (like{' '}
-              <code>XXXX-XXXX</code>) and ask you to open a specific GitHub webpage (like{' '}
-              <code>github.com/login/device</code>) and enter that code there.
+              Sometimes, especially if you're using a code editor like the one in Firebase, look out for a pop-up! This pop-up (often appearing in the <strong className="text-primary">bottom-right corner of your code viewport</strong>) might show you a short code (like{' '}
+              <code>XXXX-XXXX</code>). It will also tell you to open a specific GitHub webpage (like{' '}
+              <code>github.com/login/device</code>) in your browser and enter that code there. Your <strong className="text-primary">Terminal</strong> might also display similar instructions or the code.
             </li>
             <li>
               Or, it might ask for your GitHub username and a Personal Access Token (PAT) directly in the{' '}
@@ -100,8 +100,7 @@ const initialSteps: StepContent[] = [
             </li>
           </ul>
           <br />
-          Don&apos;t worry, just follow the prompts that appear in your{' '}
-          <strong className="text-primary">Terminal</strong> or browser. This is a standard security step to make
+          Don&apos;t worry, just follow the prompts that appear. This is a standard security step to make
           sure your code is uploaded safely!
         </>
       }
@@ -141,8 +140,6 @@ export function WalkthroughGuide() {
   const [completedSteps, setCompletedSteps] = useState<Record<string, boolean>>({});
   const [animationClass, setAnimationClass] = useState('animate-slide-in-from-right');
 
-  const numCompleted = Object.values(completedSteps).filter(Boolean).length;
-  const totalSteps = initialSteps.length;
 
   const handleNext = () => {
     if (currentStepIndex < initialSteps.length - 1) {
@@ -150,7 +147,7 @@ export function WalkthroughGuide() {
       setTimeout(() => {
         setCurrentStepIndex(currentStepIndex + 1);
         setAnimationClass('animate-slide-in-from-right');
-      }, 300); 
+      }, 300);
     }
   };
 
@@ -160,7 +157,7 @@ export function WalkthroughGuide() {
       setTimeout(() => {
         setCurrentStepIndex(currentStepIndex - 1);
         setAnimationClass('animate-slide-in-from-left');
-      }, 300); 
+      }, 300);
     }
   };
 
@@ -177,7 +174,7 @@ export function WalkthroughGuide() {
           <WalkthroughStep
             step={currentStepData}
             stepNumber={currentStepIndex + 1}
-            totalSteps={totalSteps}
+            totalSteps={initialSteps.length}
             isCompleted={!!completedSteps[currentStepData.id]}
             onToggleComplete={handleToggleComplete}
           />
