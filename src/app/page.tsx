@@ -4,6 +4,7 @@ import { Footer } from '@/components/layout/Footer';
 import { WalkthroughGuide } from '@/components/repo-flow/WalkthroughGuide';
 import { EmbeddedTerminal } from '@/components/repo-flow/EmbeddedTerminal';
 import { MouseGlowEffect } from '@/components/mouse-glow-effect';
+import { FAQ } from '@/components/repo-flow/FAQ';
 
 export default function HomePage() {
   return (
@@ -29,6 +30,7 @@ export default function HomePage() {
               <EmbeddedTerminal />
             </div>
           </div>
+          <FAQ />
         </MouseGlowEffect>
       </main>
       <Footer />
