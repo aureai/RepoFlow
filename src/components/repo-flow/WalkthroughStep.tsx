@@ -8,7 +8,7 @@ import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertTriangle, Info, Lightbulb } from 'lucide-react';
+import { AlertTriangle, Info, Lightbulb, ChevronRight } from 'lucide-react'; // Added ChevronRight
 import { cn } from '@/lib/utils';
 
 export interface StepContent {
@@ -95,9 +95,17 @@ export function WalkthroughStep({ step, isCompleted, isOpen, onToggleComplete, s
         <AccordionContent className="px-6 pb-6">
           <div className="space-y-4">
             {step.instructions.map((instr, index) => (
-              <p key={index} className={cn("leading-relaxed", isOpen ? "text-foreground/90" : "text-muted-foreground")}>
-                {renderInstruction(instr)}
-              </p>
+              <div key={index} className="flex items-start">
+                <ChevronRight 
+                  className={cn(
+                    "h-5 w-5 mr-2 mt-[3px] flex-shrink-0 transition-colors", 
+                    (isOpen || isCompleted) ? "text-primary" : "text-muted-foreground"
+                  )} 
+                />
+                <p className={cn("leading-relaxed", isOpen ? "text-foreground/90" : "text-muted-foreground")}>
+                  {renderInstruction(instr)}
+                </p>
+              </div>
             ))}
 
             {step.alerts && step.alerts.length > 0 && (
