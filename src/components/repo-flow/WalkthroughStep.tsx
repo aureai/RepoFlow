@@ -1,11 +1,14 @@
 
 "use client";
 
+import React from 'react';
 import type { LucideIcon } from 'lucide-react';
 import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Card } from '@/components/ui/card'; // Removed CardContent, CardDescription, CardHeader, CardTitle as they are not directly used here
+import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AlertTriangle, Info, Lightbulb } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export interface StepContent {
@@ -14,6 +17,7 @@ export interface StepContent {
   instructions: string[];
   commands?: string[];
   Icon?: LucideIcon;
+  alerts?: { type: 'warning' | 'info' | 'note'; title?: string; message: string }[];
 }
 
 interface WalkthroughStepProps {
@@ -25,6 +29,25 @@ interface WalkthroughStepProps {
 
 export function WalkthroughStep({ step, isCompleted, onToggleComplete, stepNumber }: WalkthroughStepProps) {
   const { Icon } = step;
+
+  const renderInstruction = (instruction: string) => {
+    // Split by backticks, capturing the content within them
+    const parts = instruction.split(/(`[^`]+`)/g);
+    return parts.map((part, index) => {
+      if (index % 2 === 1) { // Content within backticks
+        return (
+          <code
+            key={index}
+            className="bg-muted px-1.5 py-0.5 rounded-sm font-mono text-sm text-accent shadow-sm border border-border/70"
+          >
+            {part.slice(1, -1)} {/* Remove backticks */}
+          </code>
+        );
+      }
+      return <React.Fragment key={index}>{part}</React.Fragment>;
+    });
+  };
+
   return (
     <AccordionItem value={`step-${step.id}`} className="border-b-0 mb-4 last:mb-0">
       <Card className={cn(
@@ -37,19 +60,19 @@ export function WalkthroughStep({ step, isCompleted, onToggleComplete, stepNumbe
             <div className="flex items-center gap-4">
               {Icon && <Icon className={cn("h-8 w-8", isCompleted ? "text-primary" : "text-muted-foreground")} />}
               {!Icon && <div className={cn("flex items-center justify-center h-8 w-8 rounded-full border-2 text-lg font-semibold", isCompleted ? "border-primary text-primary bg-primary/10" : "border-muted-foreground text-muted-foreground")}>{stepNumber}</div>}
-              <h4 className={cn("text-xl font-semibold", isCompleted ? "text-primary" : "text-foreground")}>{step.title}</h4>
+              <h4 className={cn("text-xl font-semibold text-left", isCompleted ? "text-primary" : "text-foreground")}>{step.title}</h4>
             </div>
-            <div className="flex items-center space-x-2 ml-auto pl-4">
+            <div className="flex items-center space-x-2 ml-auto pl-4 flex-shrink-0">
               <Checkbox
                 id={`step-checkbox-${step.id}`}
                 checked={isCompleted}
                 onCheckedChange={(checked) => onToggleComplete(step.id, !!checked)}
-                onClick={(e) => e.stopPropagation()} // Prevent accordion toggle when clicking checkbox
+                onClick={(e) => e.stopPropagation()} 
                 aria-label={`Mark step ${step.title} as complete`}
                 className={cn(isCompleted ? "border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground" : "")}
               />
               <Label htmlFor={`step-checkbox-${step.id}`} className={cn("text-sm", isCompleted ? "text-primary" : "text-muted-foreground")}>
-                {isCompleted ? "Completed" : "Mark as complete"}
+                {isCompleted ? "Completed" : "Mark complete"}
               </Label>
             </div>
           </div>
@@ -57,13 +80,53 @@ export function WalkthroughStep({ step, isCompleted, onToggleComplete, stepNumbe
         <AccordionContent className="px-6 pb-6">
           <div className="space-y-4">
             {step.instructions.map((instr, index) => (
-              <p key={index} className="text-muted-foreground leading-relaxed">{instr}</p>
+              <p key={index} className="text-muted-foreground leading-relaxed">
+                {renderInstruction(instr)}
+              </p>
             ))}
 
+            {step.alerts && step.alerts.length > 0 && (
+              <div className="space-y-3 mt-4">
+                {step.alerts.map((alert, index) => {
+                  let alertIcon, alertVariant: "default" | "destructive", defaultTitle;
+                  switch (alert.type) {
+                    case 'warning':
+                      alertIcon = <AlertTriangle className="h-5 w-5" />;
+                      alertVariant = 'destructive';
+                      defaultTitle = 'Warning!';
+                      break;
+                    case 'info':
+                      alertIcon = <Info className="h-5 w-5 text-primary" />;
+                      alertVariant = 'default';
+                      defaultTitle = 'Important Info';
+                      break;
+                    case 'note':
+                      alertIcon = <Lightbulb className="h-5 w-5 text-primary" />;
+                      alertVariant = 'default';
+                      defaultTitle = 'Quick Tip';
+                      break;
+                    default:
+                      alertIcon = <Info className="h-5 w-5" />;
+                      alertVariant = 'default';
+                      defaultTitle = 'Note';
+                  }
+                  return (
+                    <Alert key={index} variant={alertVariant} className={cn(alert.type === 'info' || alert.type === 'note' ? "border-primary/30 bg-primary/5" : "")}>
+                      {React.cloneElement(alertIcon, { className: cn(alertIcon.props.className, alert.type === 'warning' ? "" : "text-primary") })}
+                      <AlertTitle className={cn(alert.type === 'warning' ? "" : "text-primary/90")}>{alert.title || defaultTitle}</AlertTitle>
+                      <AlertDescription className={cn(alert.type === 'warning' ? "" : "text-foreground/80")}>
+                        {renderInstruction(alert.message)}
+                      </AlertDescription>
+                    </Alert>
+                  );
+                })}
+              </div>
+            )}
+
             {step.commands && step.commands.length > 0 && (
-              <div className="mt-4">
+              <div className="mt-6">
                 <h5 className="font-medium text-foreground mb-2">Example Command(s):</h5>
-                <pre className="bg-black text-green-400 p-4 rounded-md overflow-x-auto">
+                <pre className="bg-black text-green-400 p-4 rounded-md overflow-x-auto shadow-inner">
                   <code className="text-sm font-mono whitespace-pre-wrap">
                     {step.commands.join('\n')}
                   </code>

@@ -3,6 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Github, GitBranch, Cloud, UploadCloud, Settings, CheckCircle, Package, Rocket, Link as LinkIcon } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { Accordion } from '@/components/ui/accordion';
 import { Progress } from '@/components/ui/progress';
 import { WalkthroughStep, type StepContent } from './WalkthroughStep';
@@ -44,10 +45,16 @@ const initialSteps: StepContent[] = [
     title: 'Create GitHub Repository',
     instructions: [
       "Go to GitHub (github.com) and log in.",
-      "Click the '+' icon in the top right corner and select 'New repository'.",
-      "Give your repository a name (e.g., 'my-awesome-app'). You can add an optional description.",
+      "Click the `+` icon in the top right corner and select 'New repository'.",
+      "Give your repository a name (e.g., `my-awesome-app`). You can add an optional description.",
       "Choose public or private. For deploying to Vercel, public or private works.",
-      "IMPORTANT: Do NOT initialize this repository with a README, .gitignore, or license file if you've already initialized Git locally. You'll push your local files."
+    ],
+    alerts: [
+      {
+        type: 'warning',
+        title: 'Critical Step!',
+        message: "Do NOT initialize this new GitHub repository with a README, .gitignore, or license file. You have already done this locally and will push your existing project files."
+      }
     ],
     Icon: Github,
   },
@@ -56,7 +63,14 @@ const initialSteps: StepContent[] = [
     title: 'Link Local to Remote Repository',
     instructions: [
       "On your new GitHub repository page, find the repository URL (HTTPS or SSH).",
-      "In your local terminal, run `git remote add origin <your-repo-url>`. Replace `<your-repo-url>` with the URL you copied. This command tells your local Git repo where the remote 'origin' is located."
+      "In your local terminal, run `git remote add origin <your-repo-url>`. This command tells your local Git repo where the remote 'origin' is located."
+    ],
+    alerts: [
+      {
+        type: 'info',
+        title: 'Placeholder Alert',
+        message: "Remember to replace `<your-repo-url>` with the actual URL from your GitHub repository page. This URL links your local project to its home on GitHub."
+      }
     ],
     commands: ['git remote add origin https://github.com/your-username/your-repo-name.git'],
     Icon: LinkIcon,
@@ -66,7 +80,14 @@ const initialSteps: StepContent[] = [
     title: 'Push to GitHub',
     instructions: [
       "Upload your local commits to the remote repository on GitHub.",
-      "Run `git push -u origin main` (or `master` if that's your default branch name). The `-u` flag sets the upstream branch for future pushes and pulls."
+      "Run `git push -u origin main`. The `-u` flag sets the upstream branch for future pushes and pulls."
+    ],
+    alerts: [
+      {
+        type: 'note',
+        title: 'Branch Name Check',
+        message: "Your default branch might be named `main` (common now) or `master` (older default). Ensure you use the correct one for your repository. If you're unsure, GitHub will usually show the default branch name on the repository page after creation."
+      }
     ],
     commands: ['git push -u origin main'],
     Icon: UploadCloud,
@@ -95,8 +116,15 @@ const initialSteps: StepContent[] = [
     title: 'Configure and Deploy',
     instructions: [
       "Vercel will show you project settings. For most Next.js apps, the defaults are fine.",
-      "You can set environment variables here if your application needs them.",
+      "You can set environment variables here if your application needs them (e.g., API keys).",
       "Click the 'Deploy' button. Vercel will build your project and deploy it."
+    ],
+    alerts: [
+       {
+        type: 'info',
+        title: 'Deployment Process',
+        message: "Vercel will build your application and then assign it a unique URL. You can monitor the build logs in real-time. Once deployed, you'll get a live link to your project!"
+      }
     ],
     Icon: Rocket,
   },
@@ -117,7 +145,6 @@ export function WalkthroughGuide() {
     setCompletedSteps(prev => ({ ...prev, [id]: completed }));
   };
   
-  // Function to handle opening the next accordion item
   const handleOpenNext = (currentId: string) => {
     const currentIndex = initialSteps.findIndex(step => step.id === currentId);
     if (currentIndex !== -1 && currentIndex < initialSteps.length - 1) {
