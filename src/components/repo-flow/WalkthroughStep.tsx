@@ -1,15 +1,17 @@
 
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import type { LucideIcon } from 'lucide-react';
 import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertTriangle, Info, Lightbulb, ChevronRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { AlertTriangle, Info, Lightbulb, ChevronRight, Copy, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
 
 export interface StepContent {
   id: string;
@@ -30,6 +32,28 @@ interface WalkthroughStepProps {
 
 export function WalkthroughStep({ step, isCompleted, isOpen, onToggleComplete, stepNumber }: WalkthroughStepProps) {
   const { Icon } = step;
+  const [copied, setCopied] = useState(false);
+  const { toast } = useToast();
+
+  const handleCopyCommand = () => {
+    if (!step.commands || step.commands.length === 0) return;
+    const commandText = step.commands.join('\n');
+    navigator.clipboard.writeText(commandText).then(() => {
+      setCopied(true);
+      toast({
+        title: "Copied!",
+        description: "Command copied to clipboard.",
+      });
+      setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
+    }).catch(err => {
+      console.error('Failed to copy: ', err);
+      toast({
+        variant: "destructive",
+        title: "Copy Failed",
+        description: "Could not copy command to clipboard.",
+      });
+    });
+  };
 
   const renderInstruction = (instruction: string) => {
     const keywordMap: Record<string, {url: string; displayText: string}> = {
@@ -39,42 +63,36 @@ export function WalkthroughStep({ step, isCompleted, isOpen, onToggleComplete, s
       'vercel.com': { url: 'https://vercel.com', displayText: 'Vercel' },
     };
 
-    // Regex to match keywords (case-insensitive, whole word)
-    // Ensure that keywords with dots (like github.com) are matched correctly by escaping the dot.
     const escapedKeywords = Object.keys(keywordMap).map(k => k.replace('.', '\\.'));
     const keywordRegex = new RegExp(`\\b(${escapedKeywords.join('|')})\\b`, 'gi');
 
-    const parts = instruction.split(/(`[^`]+`)/g); // Split by code blocks first
+    const parts = instruction.split(/(`[^`]+`)/g); 
 
     return parts.map((part, partIndex) => {
-      if (partIndex % 2 === 1) { // Content within backticks (code)
+      if (partIndex % 2 === 1) { 
         return (
           <code
             key={`code-${step.id}-${partIndex}`}
             className="bg-muted px-1.5 py-0.5 rounded-sm font-mono text-sm text-accent shadow-sm border border-border/70"
           >
-            {part.slice(1, -1)} {/* Remove backticks */}
+            {part.slice(1, -1)}
           </code>
         );
       }
 
-      // For non-code parts, search for keywords
       const textSegments: React.ReactNode[] = [];
       let lastIndex = 0;
       let match;
       
-      // Create a new RegExp instance for each use of exec with the global flag
       const localKeywordRegex = new RegExp(keywordRegex); 
       while ((match = localKeywordRegex.exec(part)) !== null) {
         const matchedKeyword = match[0].toLowerCase();
         const keywordConfig = keywordMap[matchedKeyword];
 
-        // Add text before the keyword
         if (match.index > lastIndex) {
           textSegments.push(part.substring(lastIndex, match.index));
         }
 
-        // Add the keyword as a link
         if (keywordConfig) {
           textSegments.push(
             <a
@@ -88,13 +106,11 @@ export function WalkthroughStep({ step, isCompleted, isOpen, onToggleComplete, s
             </a>
           );
         } else {
-          // This case should ideally not be hit if the regex and map are correct
           textSegments.push(match[0]); 
         }
         lastIndex = localKeywordRegex.lastIndex;
       }
       
-      // Add any remaining text after the last keyword
       if (lastIndex < part.length) {
         textSegments.push(part.substring(lastIndex));
       }
@@ -206,7 +222,28 @@ export function WalkthroughStep({ step, isCompleted, isOpen, onToggleComplete, s
 
             {step.commands && step.commands.length > 0 && (
               <div className="mt-6">
-                <h5 className="font-medium text-foreground mb-2">Example Command(s):</h5>
+                <div className="flex justify-between items-center mb-2">
+                  <h5 className="font-medium text-foreground">Example Command(s):</h5>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleCopyCommand}
+                    className="text-muted-foreground hover:text-primary"
+                    aria-label="Copy command to clipboard"
+                  >
+                    {copied ? (
+                      <>
+                        <Check className="mr-2 h-4 w-4 text-green-500" />
+                        Copied!
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="mr-2 h-4 w-4" />
+                        Copy
+                      </>
+                    )}
+                  </Button>
+                </div>
                 <pre className="bg-black text-green-400 p-4 rounded-md overflow-x-auto shadow-inner">
                   <code className="text-sm font-mono whitespace-pre-wrap">
                     {step.commands.join('\n')}
@@ -220,4 +257,3 @@ export function WalkthroughStep({ step, isCompleted, isOpen, onToggleComplete, s
     </AccordionItem>
   );
 }
-
