@@ -48,9 +48,9 @@ const initialSteps: StepContent[] = [
     title: '2. Link Your Code to GitHub',
     Icon: Github,
     instructions: [
-      <>Next, let&apos;s get your code onto <strong key="github-step2" className="text-primary">GitHub</strong>.</>,
-      <>If you don&apos;t have a GitHub account, create one. Then, on <strong key="github-page-step2" className="text-primary">GitHub</strong>, click <strong key="new-repo-step2" className="text-primary">New repository</strong>.</>,
-      <>Give your repository a name (like <code>my-cool-app</code>). You can choose if it&apos;s <strong key="public-step2" className="text-primary">public</strong> (anyone can see) or <strong key="private-step2" className="text-primary">private</strong> (only you and people you invite). A description is optional.</>,
+      <>Next, let&apos;s get your code onto <strong className="text-primary">GitHub</strong>.</>,
+      <>If you don&apos;t have a GitHub account, create one. Then, on <strong className="text-primary">GitHub</strong>, click <strong key="new-repo-step2" className="text-primary">New repository</strong>.</>,
+      <>Give your repository a name (like <code>my-cool-app</code>). You can choose if it&apos;s <strong className="text-primary">public</strong> (anyone can see) or <strong className="text-primary">private</strong> (only you and people you invite). A description is optional.</>,
       <>After creating the repository, GitHub will show you some instructions. Look for the section that says '<strong className="text-primary">…or push an existing repository from the command line</strong>'.</>,
       <React.Fragment key="github-commands-intro">
         GitHub will give you a few commands. They&apos;ll look something like this (make sure to use{' '}
@@ -168,9 +168,15 @@ export function WalkthroughGuide() {
   const currentStepData = initialSteps[currentStepIndex];
 
   return (
-    <div className="w-full relative">
-      <div className={cn("w-full max-w-5xl mx-auto min-h-[600px] md:min-h-[700px] flex items-center justify-center relative overflow-hidden", animationClass)} key={currentStepIndex}>
-        <div className="w-full max-w-4xl mx-auto">
+    <div className="w-full">
+      <div
+        className={cn(
+          'w-full max-w-5xl mx-auto h-[600px] md:h-[700px] flex items-center justify-center relative overflow-hidden',
+          animationClass
+        )}
+        key={currentStepIndex}
+      >
+        <div className="w-full max-w-4xl mx-auto h-full"> {/* Ensure this wrapper also takes h-full */}
           <WalkthroughStep
             step={currentStepData}
             stepNumber={currentStepIndex + 1}
@@ -179,29 +185,29 @@ export function WalkthroughGuide() {
             onToggleComplete={handleToggleComplete}
           />
         </div>
-      </div>
 
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={handlePrevious}
-        disabled={currentStepIndex === 0}
-        className="absolute left-0 top-1/2 -translate-y-1/2 disabled:opacity-30 p-2 rounded-full focus:ring-2 focus:ring-primary"
-        aria-label="Previous step"
-      >
-        <ChevronLeft className="h-8 w-8" />
-      </Button>
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={handleNext}
-        disabled={currentStepIndex === initialSteps.length - 1}
-        className="absolute right-0 top-1/2 -translate-y-1/2 disabled:opacity-30 p-2 rounded-full focus:ring-2 focus:ring-primary"
-        aria-label="Next step"
-      >
-        <ChevronRight className="h-8 w-8" />
-      </Button>
+        {/* Navigation Buttons INSIDE the animated container with fixed height */}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handlePrevious}
+          disabled={currentStepIndex === 0}
+          className="absolute left-0 md:left-2 top-1/2 -translate-y-1/2 disabled:opacity-30 p-2 rounded-full focus:ring-2 focus:ring-primary z-10 bg-background/30 hover:bg-background/70"
+          aria-label="Previous step"
+        >
+          <ChevronLeft className="h-8 w-8" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handleNext}
+          disabled={currentStepIndex === initialSteps.length - 1}
+          className="absolute right-0 md:right-2 top-1/2 -translate-y-1/2 disabled:opacity-30 p-2 rounded-full focus:ring-2 focus:ring-primary z-10 bg-background/30 hover:bg-background/70"
+          aria-label="Next step"
+        >
+          <ChevronRight className="h-8 w-8" />
+        </Button>
+      </div>
     </div>
   );
 }
-
