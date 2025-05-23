@@ -95,7 +95,7 @@ export function WalkthroughStep({ step, isCompleted, isOpen, onToggleComplete, s
         <AccordionContent className="px-6 pb-6">
           <div className="space-y-4">
             {step.instructions.map((instr, index) => (
-              <p key={index} className="text-muted-foreground leading-relaxed">
+              <p key={index} className={cn("leading-relaxed", isOpen ? "text-foreground/90" : "text-muted-foreground")}>
                 {renderInstruction(instr)}
               </p>
             ))}
@@ -111,12 +111,12 @@ export function WalkthroughStep({ step, isCompleted, isOpen, onToggleComplete, s
                       defaultTitle = 'Warning!';
                       break;
                     case 'info':
-                      alertIcon = <Info className="h-5 w-5" />; // Icon color handled by cn below
+                      alertIcon = <Info className="h-5 w-5" />; 
                       alertVariant = 'default';
                       defaultTitle = 'Important Info';
                       break;
                     case 'note':
-                      alertIcon = <Lightbulb className="h-5 w-5" />; // Icon color handled by cn below
+                      alertIcon = <Lightbulb className="h-5 w-5" />; 
                       alertVariant = 'default';
                       defaultTitle = 'Quick Tip';
                       break;
