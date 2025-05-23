@@ -52,13 +52,13 @@ body {
   }
 
   .dark {
-    --background: 210 11% 16%; /* #22272e - Dark tech-friendly grey */
+    --background: 210 11% 12%; /* Darker tech-friendly grey */
     --foreground: 0 0% 98%; /* Almost white */
 
-    --card: 210 10% 20%; /* #2c313a - Slightly lighter than background */
+    --card: 210 10% 15%; /* Slightly lighter than new darker background */
     --card-foreground: 0 0% 98%;
 
-    --popover: 210 10% 18%; /* Similar to card */
+    --popover: 210 10% 14%; /* Darker, similar to card */
     --popover-foreground: 0 0% 98%;
 
     --primary: 278 50% 60%; /* #A663CC - Vibrant Purple */
@@ -67,10 +67,10 @@ body {
     --primary-s: 50%;
     --primary-l: 60%;
 
-    --secondary: 210 8% 29%; /* #444b52 - Soft grey for contrast */
+    --secondary: 210 8% 25%; /* Darker soft grey for contrast */
     --secondary-foreground: 0 0% 98%;
 
-    --muted: 210 8% 25%; /* Slightly darker than secondary */
+    --muted: 210 8% 22%; /* Darker than new secondary */
     --muted-foreground: 0 0% 63.9%; /* Lighter grey for muted text */
 
     --accent: 278 50% 60%; /* #A663CC - Vibrant Purple */
@@ -82,8 +82,8 @@ body {
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 210 8% 22%; /* #323840 - Darker than card */
-    --input: 210 8% 22%;
+    --border: 210 8% 18%; /* Darker than new card */
+    --input: 210 8% 18%; /* Darker to match border */
     --ring: 278 50% 65%; /* Slightly lighter purple for ring */
   }
 }
@@ -149,3 +149,4 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--muted-foreground) / 0.8);
 }
+
