@@ -4,6 +4,7 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { HelpCircle, Github, ArrowUpCircle, RefreshCw } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const faqData = [
   {
@@ -57,8 +58,11 @@ export function FAQ() {
         <Accordion type="single" collapsible className="w-full space-y-2">
           {faqData.map((item) => (
             <AccordionItem key={item.id} value={item.id} className="border-b-0">
-               <Card className="bg-card hover:bg-muted/30 transition-colors">
-                <AccordionTrigger className="p-4 text-left hover:no-underline text-lg">
+               <Card className="bg-card hover:bg-muted/30 transition-colors duration-200">
+                <AccordionTrigger className={cn(
+                  "p-4 text-left hover:no-underline text-lg w-full",
+                  "data-[state=open]:bg-primary/10 data-[state=open]:shadow-inner rounded-md" 
+                )}>
                   <div className="flex items-center gap-3">
                     <item.Icon className="h-6 w-6 text-primary flex-shrink-0" />
                     {item.question}
@@ -67,7 +71,7 @@ export function FAQ() {
                 <AccordionContent className="px-4 pb-4">
                   <div className="space-y-3 text-muted-foreground pl-9">
                     {item.answer.map((paragraph, index) => (
-                      <p key={index} dangerouslySetInnerHTML={{ __html: paragraph.replace(/<code>(.*?)<\/code>/g, '<code class="bg-muted px-1.5 py-0.5 rounded-sm font-mono text-sm text-accent shadow-sm border border-border/70">$1</code>') }} />
+                      <p key={index} dangerouslySetInnerHTML={{ __html: paragraph.replace(/<strong>(.*?)<\/strong>/g, '<strong class="text-foreground/90">$1</strong>').replace(/<code>(.*?)<\/code>/g, '<code class="bg-muted px-1.5 py-0.5 rounded-sm font-mono text-sm text-accent shadow-sm border border-border/70">$1</code>') }} />
                     ))}
                   </div>
                 </AccordionContent>

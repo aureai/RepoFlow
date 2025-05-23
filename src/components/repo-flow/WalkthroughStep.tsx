@@ -35,7 +35,6 @@ export function WalkthroughStep({ step, isCompleted, onToggleComplete, stepNumbe
   const { toast } = useToast();
 
   useEffect(() => {
-    // Effect for resetting copied state when step changes, if needed
     setCopied(false);
   }, [step]);
 

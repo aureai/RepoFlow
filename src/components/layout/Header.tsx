@@ -1,3 +1,4 @@
+
 import { Github, Layers, Moon, Sun } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
 
@@ -31,8 +32,12 @@ export function Header() {
           </h1>
         </div>
         <div className="flex items-center gap-4">
-          <Github className="h-6 w-6 text-muted-foreground hover:text-foreground transition-colors" />
-          <Layers className="h-6 w-6 text-muted-foreground hover:text-foreground transition-colors" />
+          <a href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="text-muted-foreground hover:text-primary transform hover:scale-110 transition-all duration-200">
+            <Github className="h-6 w-6" />
+          </a>
+          <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" aria-label="Vercel" className="text-muted-foreground hover:text-primary transform hover:scale-110 transition-all duration-200">
+            <Layers className="h-6 w-6" />
+          </a>
           <ThemeToggle />
         </div>
       </div>
