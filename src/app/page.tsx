@@ -16,7 +16,7 @@ export default function HomePage() {
               RepoFlow: Your Guide to Publishing Your Firebase App
             </h2>
             <p className="text-lg md:text-xl text-foreground/80 max-w-3xl mx-auto">
-              Built your app with a Firebase visual tool? First, switch to <strong className="text-primary">'Code View'</strong> (often an icon in the top-right). RepoFlow then guides you to get your app&apos;s code onto GitHub and live with Vercel.
+              Ready to share your Firebase app with the world? If you built it with a visual tool, the first step is to switch to <strong className="text-primary">'Code View'</strong> (look for an icon, often in the top-right!). RepoFlow then walks you through getting your app&apos;s code onto GitHub and live with Vercel.
             </p>
           </section>
 
