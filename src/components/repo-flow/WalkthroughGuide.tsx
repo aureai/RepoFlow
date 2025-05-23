@@ -1,10 +1,12 @@
 
 "use client";
 
-import React, { useState } from 'react';
-import { ArrowLeft, ArrowRight, TerminalSquareIcon, Github, Rocket, AlertTriangle, Info, Lightbulb, Eye, Code } from 'lucide-react';
-import { WalkthroughStep, type StepContent } from './WalkthroughStep';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
+import { ChevronLeft, ChevronRight, TerminalSquareIcon, Github, Rocket, AlertTriangle, Info, Lightbulb } from 'lucide-react';
+import { WalkthroughStep, type StepContent } from './WalkthroughStep'; // Corrected import
+import { cn } from '@/lib/utils';
 
 const initialSteps: StepContent[] = [
   {
@@ -51,7 +53,7 @@ const initialSteps: StepContent[] = [
       <>If you don&apos;t have a GitHub account, create one. Then, on <strong className="text-primary">GitHub</strong>, click <strong key="new-repo-step2" className="text-primary">New repository</strong>.</>,
       <>Give your repository a name (like <code className="bg-muted px-1.5 py-0.5 rounded-sm font-mono text-sm text-accent shadow-sm border border-border/70">my-cool-app</code>). You can choose if it&apos;s <strong key="public-step2" className="text-primary">public</strong> (anyone can see) or <strong key="private-step2" className="text-primary">private</strong> (only you and people you invite). A description is optional.</>,
       <>After creating the repository, GitHub will show you some instructions. Look for the section that says '<strong className="text-primary">…or push an existing repository from the command line</strong>'.</>,
-      <>GitHub will give you a few commands. They&apos;ll look something like this (but use <strong key="your-repo-name" className="text-primary">YOUR actual GitHub username and repository name</strong> from the page!):</>,
+      <React.Fragment key="github-commands-intro">GitHub will give you a few commands. They&apos;ll look something like this (but use <strong className="text-primary">YOUR actual GitHub username and repository name</strong> from the page!):</React.Fragment>
     ],
     commands: [
       'git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPOSITORY_NAME.git',
@@ -59,12 +61,6 @@ const initialSteps: StepContent[] = [
       'git push -u origin main'
     ],
     alerts: [
-       {
-        type: 'warning',
-        Icon: AlertTriangle,
-        title: 'IMPORTANT: Keep Your Repo Empty on GitHub!',
-        message: "When creating the new repository on GitHub, do NOT check any boxes to add a README, .gitignore, or license. Your project already has these files. You need an empty canvas on GitHub for this step."
-      },
       {
         type: 'warning',
         Icon: AlertTriangle,
@@ -72,10 +68,16 @@ const initialSteps: StepContent[] = [
         message: "Before you push your code, double-check your project files. Make absolutely sure you are NOT uploading any API keys, passwords, or other sensitive information. Check your `.gitignore` file (it's in your project's main folder) to ensure files or folders containing secrets are listed there. If they aren't, add them! This is very important to keep your app and accounts secure."
       },
       {
-        type: 'note',
-        Icon: Lightbulb,
-        title: 'Copy & Paste from GitHub',
-        message: "Carefully copy all three commands GitHub gives you under '…or push an existing repository...'. Paste them into your Terminal (the one in your code editor) and press Enter. This tells your local project where your GitHub repository is and uploads your code to it."
+        type: 'warning',
+        Icon: AlertTriangle,
+        title: 'IMPORTANT: Keep Your Repo Empty on GitHub!',
+        message: "When creating the new repository on GitHub, do NOT check any boxes to add a README, .gitignore, or license. Your project already has these files. You need an empty canvas on GitHub for this step."
+      },
+      {
+        type: 'info',
+        Icon: Info,
+        title: "Logging into GitHub",
+        message: "When you run the `git push` command (the last one you copied from GitHub), your terminal will need to connect to your GitHub account. If it's your first time, it will ask you to log in. This might open a browser window for you to authorize, or it might ask for your GitHub username and a Personal Access Token (PAT) directly in the terminal. Just follow the prompts – it's how your computer securely sends your code to GitHub!"
       }
     ],
   },
@@ -113,38 +115,40 @@ export function WalkthroughGuide() {
   const [completedSteps, setCompletedSteps] = useState<Record<string, boolean>>({});
   const [animationClass, setAnimationClass] = useState('animate-slide-in-from-right');
 
+  const numCompleted = Object.values(completedSteps).filter(Boolean).length;
   const totalSteps = initialSteps.length;
+  const progressValue = totalSteps > 0 ? (numCompleted / totalSteps) * 100 : 0;
+
+  const handleNext = () => {
+    if (currentStepIndex < initialSteps.length - 1) {
+      setAnimationClass('animate-slide-out-to-left');
+      setTimeout(() => {
+        setCurrentStepIndex(currentStepIndex + 1);
+        setAnimationClass('animate-slide-in-from-right');
+      }, 300); // Match animation duration
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentStepIndex > 0) {
+      setAnimationClass('animate-slide-out-to-right');
+      setTimeout(() => {
+        setCurrentStepIndex(currentStepIndex - 1);
+        setAnimationClass('animate-slide-in-from-left');
+      }, 300); // Match animation duration
+    }
+  };
 
   const handleToggleComplete = (id: string, completed: boolean) => {
     setCompletedSteps(prev => ({ ...prev, [id]: completed }));
   };
 
-  const goToNextStep = () => {
-    if (currentStepIndex < totalSteps - 1) {
-      setAnimationClass('animate-slide-out-to-left');
-      setTimeout(() => {
-        setCurrentStepIndex(prev => prev + 1);
-        setAnimationClass('animate-slide-in-from-right');
-      }, 300); 
-    }
-  };
-
-  const goToPrevStep = () => {
-    if (currentStepIndex > 0) {
-      setAnimationClass('animate-slide-out-to-right');
-      setTimeout(() => {
-        setCurrentStepIndex(prev => prev - 1);
-        setAnimationClass('animate-slide-in-from-left');
-      }, 300); 
-    }
-  };
-  
   const currentStepData = initialSteps[currentStepIndex];
 
   return (
     <div className="w-full relative">
-      <div className="w-full max-w-5xl mx-auto min-h-[600px] md:min-h-[700px] flex items-center justify-center relative overflow-hidden mb-8">
-        <div key={currentStepIndex} className={`w-full max-w-4xl mx-auto h-full flex items-center justify-center ${animationClass}`}>
+      <div className={cn("w-full max-w-5xl mx-auto min-h-[600px] md:min-h-[700px] flex items-center justify-center relative overflow-hidden", animationClass)} key={currentStepIndex}>
+        <div className="w-full max-w-4xl mx-auto">
           <WalkthroughStep
             step={currentStepData}
             stepNumber={currentStepIndex + 1}
@@ -155,28 +159,26 @@ export function WalkthroughGuide() {
         </div>
       </div>
 
-      {currentStepIndex > 0 && (
-        <Button
-          onClick={goToPrevStep}
-          variant="outline"
-          size="lg"
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-3"
-          aria-label="Previous Step"
-        >
-          <ArrowLeft className="h-6 w-6" />
-        </Button>
-      )}
-      {currentStepIndex < totalSteps - 1 && (
-        <Button
-          onClick={goToNextStep}
-          variant="default"
-          size="lg"
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-3"
-          aria-label="Next Step"
-        >
-          <ArrowRight className="h-6 w-6" />
-        </Button>
-      )}
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={handlePrevious}
+        disabled={currentStepIndex === 0}
+        className="absolute left-0 top-1/2 -translate-y-1/2 disabled:opacity-30 p-2 rounded-full focus:ring-2 focus:ring-primary"
+        aria-label="Previous step"
+      >
+        <ChevronLeft className="h-8 w-8" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={handleNext}
+        disabled={currentStepIndex === initialSteps.length - 1}
+        className="absolute right-0 top-1/2 -translate-y-1/2 disabled:opacity-30 p-2 rounded-full focus:ring-2 focus:ring-primary"
+        aria-label="Next step"
+      >
+        <ChevronRight className="h-8 w-8" />
+      </Button>
     </div>
   );
 }
