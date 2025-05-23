@@ -13,11 +13,11 @@ export default function HomePage() {
         <MouseGlowEffect className="rounded-lg">
           <section className="text-center mb-12 md:mb-16">
             <h2 className="text-4xl md:text-5xl font-extrabold text-foreground mb-4">
-              Deploy Your Firebase Next.js App with GitHub & Vercel
+              Take Your Firebase Next.js Frontend Code Live!
             </h2>
             <p className="text-lg md:text-xl text-foreground/80 max-w-3xl mx-auto">
-              RepoFlow guides Firebase developers through linking their Next.js frontend to GitHub 
-              and deploying with Vercel, streamlining the path from local development to a live application.
+              RepoFlow guides you from your Next.js project code (even if started with a Firebase tool) 
+              to a professional deployment using GitHub for version control and Vercel for hosting.
             </p>
           </section>
 

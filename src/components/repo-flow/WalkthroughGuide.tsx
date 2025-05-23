@@ -14,7 +14,7 @@ const initialSteps: StepContent[] = [
     id: 'init-git',
     title: 'Initialize Git Repository',
     instructions: [
-      "This guide assumes you have a Next.js application (perhaps already using Firebase services) that you want to deploy.",
+      "This guide starts once you have the Next.js code for your Firebase project's frontend. You might have generated this code using a Firebase tool or set it up manually. These steps focus on taking that code to a live deployment.",
       "Open your project's root folder in your terminal.",
       "Run the command `git init` to initialize a new Git repository. This creates a hidden `.git` directory that tracks your project's history."
     ],
@@ -69,8 +69,8 @@ const initialSteps: StepContent[] = [
     alerts: [
       {
         type: 'info',
-        title: 'Placeholder Alert',
-        message: "Remember to replace `<your-repo-url>` with the actual URL from your GitHub repository page."
+        title: 'Remember',
+        message: "Replace `<your-repo-url>` with the actual URL from your GitHub repository page."
       }
     ],
     commands: ['git remote add origin https://github.com/your-username/your-repo-name.git'],
@@ -129,7 +129,7 @@ const initialSteps: StepContent[] = [
       {
         type: 'note',
         title: 'Live URL',
-        message: "After Vercel finishes building, it will assign your project a unique URL. You can monitor the build logs in real-time. Once deployed, you'll get a live link to your Next.js app!"
+        message: "After Vercel finishes building, it will assign your project a unique URL. You can monitor the build logs. Once deployed, you'll get a live link to your Next.js app!"
       }
     ],
     Icon: Rocket,
