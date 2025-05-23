@@ -16,7 +16,7 @@ import { useToast } from '@/hooks/use-toast';
 export interface StepContent {
   id: string;
   title: string;
-  instructions: React.ReactNode[]; // Allow ReactNode for more complex instructions like images
+  instructions: React.ReactNode[];
   commands?: string[];
   Icon?: LucideIcon;
   alerts?: { type: 'warning' | 'info' | 'note'; title?: string; message: string | React.ReactNode }[];
@@ -57,10 +57,9 @@ export function WalkthroughStep({ step, isCompleted, isOpen, onToggleComplete, s
 
   const renderInstructionPart = (part: string | React.ReactNode, partKey: string | number): React.ReactNode => {
     if (typeof part !== 'string') {
-      return part; // It's already a ReactNode (e.g., an Image component or JSX)
+      return part; 
     }
 
-    // Process string parts for inline code and links
     const keywordMap: Record<string, {url: string; displayText: string}> = {
       'github': { url: 'https://github.com', displayText: 'GitHub' },
       'github.com': { url: 'https://github.com', displayText: 'GitHub.com' },
@@ -71,10 +70,10 @@ export function WalkthroughStep({ step, isCompleted, isOpen, onToggleComplete, s
     const escapedKeywords = Object.keys(keywordMap).map(k => k.replace('.', '\\.'));
     const keywordRegex = new RegExp(`\\b(${escapedKeywords.join('|')})\\b`, 'gi');
     
-    const segments = part.split(/(`[^`]+`)/g); // Split by inline code blocks
+    const segments = part.split(/(`[^`]+`)/g); 
 
     return segments.map((segment, segmentIndex) => {
-      if (segmentIndex % 2 === 1) { // This is an inline code block
+      if (segmentIndex % 2 === 1) { 
         return (
           <code
             key={`code-${step.id}-${partKey}-${segmentIndex}`}
@@ -85,12 +84,11 @@ export function WalkthroughStep({ step, isCompleted, isOpen, onToggleComplete, s
         );
       }
 
-      // This is a regular text segment, check for keywords to linkify
       const textNodes: React.ReactNode[] = [];
       let lastIndex = 0;
       let match;
       
-      const localKeywordRegex = new RegExp(keywordRegex); // Create a new RegExp instance for each iteration
+      const localKeywordRegex = new RegExp(keywordRegex); 
       while ((match = localKeywordRegex.exec(segment)) !== null) {
         const matchedKeyword = match[0].toLowerCase();
         const keywordConfig = keywordMap[matchedKeyword];
@@ -112,7 +110,7 @@ export function WalkthroughStep({ step, isCompleted, isOpen, onToggleComplete, s
             </a>
           );
         } else {
-           textNodes.push(match[0]); // Should not happen with current regex but good fallback
+           textNodes.push(match[0]); 
         }
         lastIndex = localKeywordRegex.lastIndex;
       }
@@ -264,3 +262,4 @@ export function WalkthroughStep({ step, isCompleted, isOpen, onToggleComplete, s
     </AccordionItem>
   );
 }
+

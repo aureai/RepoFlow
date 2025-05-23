@@ -170,7 +170,7 @@ export function WalkthroughGuide() {
         <Accordion 
           type="single" 
           collapsible 
-          className="w-full space-y-0"
+          className="w-full" // Removed space-y-0
           value={openAccordionItem}
           onValueChange={(value) => setOpenAccordionItem(value)}
         >
@@ -194,3 +194,4 @@ export function WalkthroughGuide() {
     </Card>
   );
 }
+
