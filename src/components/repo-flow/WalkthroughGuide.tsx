@@ -3,9 +3,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
 import { ChevronLeft, ChevronRight, TerminalSquareIcon, Github, Rocket, AlertTriangle, Info, Lightbulb } from 'lucide-react';
-import { WalkthroughStep, type StepContent } from './WalkthroughStep'; // Corrected import
+import { WalkthroughStep, type StepContent } from './WalkthroughStep'; 
 import { cn } from '@/lib/utils';
 
 const initialSteps: StepContent[] = [
@@ -16,7 +15,7 @@ const initialSteps: StepContent[] = [
     instructions: [
       <>First up! If you were using a visual tool, make sure you've switched to '<strong key="code-view-step1" className="text-primary">Code View</strong>' (look for an icon, often in the top-right!). This guide is for when you can see all your project's files.</>,
       <>In your code editor, open the <strong className="text-primary">Terminal (Command Line)</strong> and have your <strong className="text-primary">Project's File Directory</strong> visible.</>,
-      <>Time to save your app's current version. In your Terminal, type these commands one by one:</>,
+      <>Time to save your app's current version. In your <strong className="text-primary">Terminal</strong>, type these commands one by one, pressing Enter after each:</>,
     ],
     commands: [
       'git init',
@@ -49,11 +48,16 @@ const initialSteps: StepContent[] = [
     title: '2. Link Your Code to GitHub',
     Icon: Github,
     instructions: [
-      <>Next, let&apos;s get your code onto <strong className="text-primary">GitHub</strong>.</>,
-      <>If you don&apos;t have a GitHub account, create one. Then, on <strong className="text-primary">GitHub</strong>, click <strong key="new-repo-step2" className="text-primary">New repository</strong>.</>,
-      <>Give your repository a name (like <code className="bg-muted px-1.5 py-0.5 rounded-sm font-mono text-sm text-accent shadow-sm border border-border/70">my-cool-app</code>). You can choose if it&apos;s <strong key="public-step2" className="text-primary">public</strong> (anyone can see) or <strong key="private-step2" className="text-primary">private</strong> (only you and people you invite). A description is optional.</>,
+      <>Next, let&apos;s get your code onto <strong key="github-step2" className="text-primary">GitHub</strong>.</>,
+      <>If you don&apos;t have a GitHub account, create one. Then, on <strong key="github-page-step2" className="text-primary">GitHub</strong>, click <strong key="new-repo-step2" className="text-primary">New repository</strong>.</>,
+      <>Give your repository a name (like <code>my-cool-app</code>). You can choose if it&apos;s <strong key="public-step2" className="text-primary">public</strong> (anyone can see) or <strong key="private-step2" className="text-primary">private</strong> (only you and people you invite). A description is optional.</>,
       <>After creating the repository, GitHub will show you some instructions. Look for the section that says '<strong className="text-primary">…or push an existing repository from the command line</strong>'.</>,
-      <React.Fragment key="github-commands-intro">GitHub will give you a few commands. They&apos;ll look something like this (but use <strong className="text-primary">YOUR actual GitHub username and repository name</strong> from the page!):</React.Fragment>
+      <React.Fragment key="github-commands-intro">
+        GitHub will give you a few commands. They&apos;ll look something like this (make sure to use{' '}
+        <strong className="text-primary">YOUR actual GitHub username and repository name</strong> from the page!).
+        Carefully copy these commands. You&apos;ll then switch back to the{' '}
+        <strong className="text-primary">Terminal</strong> you opened earlier (inside your code editor or Firebase Code View) and paste these commands there, one at a time, pressing Enter after each one.
+      </React.Fragment>
     ],
     commands: [
       'git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPOSITORY_NAME.git',
@@ -77,7 +81,29 @@ const initialSteps: StepContent[] = [
         type: 'info',
         Icon: Info,
         title: "Logging into GitHub",
-        message: "When you run the `git push` command (the last one you copied from GitHub), your terminal will need to connect to your GitHub account. If it's your first time, it will ask you to log in. This might open a browser window for you to authorize, or it might ask for your GitHub username and a Personal Access Token (PAT) directly in the terminal. Just follow the prompts – it's how your computer securely sends your code to GitHub!"
+        message: <>
+          When you run the <code>git push ...</code> command (the last one from GitHub), your{' '}
+          <strong className="text-primary">Terminal</strong> will try to connect to your GitHub account.
+          If it&apos;s your first time doing this, GitHub will need to confirm it&apos;s you!
+          <ul className="list-disc space-y-1 mt-2 ml-4">
+            <li>
+              It might open a browser window for you to log in and authorize.
+            </li>
+            <li>
+              Sometimes, your <strong className="text-primary">Terminal</strong> might show you a short code (like{' '}
+              <code>XXXX-XXXX</code>) and ask you to open a specific GitHub webpage (like{' '}
+              <code>github.com/login/device</code>) and enter that code there.
+            </li>
+            <li>
+              Or, it might ask for your GitHub username and a Personal Access Token (PAT) directly in the{' '}
+              <strong className="text-primary">Terminal</strong>.
+            </li>
+          </ul>
+          <br />
+          Don&apos;t worry, just follow the prompts that appear in your{' '}
+          <strong className="text-primary">Terminal</strong> or browser. This is a standard security step to make
+          sure your code is uploaded safely!
+        </>
       }
     ],
   },
@@ -117,7 +143,6 @@ export function WalkthroughGuide() {
 
   const numCompleted = Object.values(completedSteps).filter(Boolean).length;
   const totalSteps = initialSteps.length;
-  const progressValue = totalSteps > 0 ? (numCompleted / totalSteps) * 100 : 0;
 
   const handleNext = () => {
     if (currentStepIndex < initialSteps.length - 1) {
@@ -125,7 +150,7 @@ export function WalkthroughGuide() {
       setTimeout(() => {
         setCurrentStepIndex(currentStepIndex + 1);
         setAnimationClass('animate-slide-in-from-right');
-      }, 300); // Match animation duration
+      }, 300); 
     }
   };
 
@@ -135,7 +160,7 @@ export function WalkthroughGuide() {
       setTimeout(() => {
         setCurrentStepIndex(currentStepIndex - 1);
         setAnimationClass('animate-slide-in-from-left');
-      }, 300); // Match animation duration
+      }, 300); 
     }
   };
 
