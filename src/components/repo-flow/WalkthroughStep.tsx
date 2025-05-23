@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { LucideIcon } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -11,7 +11,6 @@ import { Button } from '@/components/ui/button';
 import { AlertTriangle, Info, Lightbulb, ChevronRight, Copy, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
-import Image from 'next/image';
 
 export interface StepContent {
   id: string;
@@ -34,40 +33,11 @@ export function WalkthroughStep({ step, isCompleted, onToggleComplete, stepNumbe
   const { Icon } = step;
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
-  const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const card = cardRef.current;
-    if (!card) return;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-      
-      const rotateX = ((y - centerY) / centerY) * -5; // Max 5 deg tilt for X
-      const rotateY = ((x - centerX) / centerX) * 5;  // Max 5 deg tilt for Y
-      
-      card.style.transform = `perspective(1500px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`;
-    };
-
-    const handleMouseLeave = () => {
-      card.style.transform = 'perspective(1500px) rotateX(0deg) rotateY(0deg) scale(1)';
-    };
-
-    card.addEventListener('mousemove', handleMouseMove);
-    card.addEventListener('mouseleave', handleMouseLeave);
-    // Set initial transform for smooth entry if animated by parent
-    card.style.transform = 'perspective(1500px) rotateX(0deg) rotateY(0deg) scale(1)';
-
-
-    return () => {
-      card.removeEventListener('mousemove', handleMouseMove);
-      card.removeEventListener('mouseleave', handleMouseLeave);
-    };
-  }, [step]); // Re-run if step changes to reset event listeners, though step content changing is main driver
+    // Effect for resetting copied state when step changes, if needed
+    setCopied(false);
+  }, [step]);
 
   const handleCopyCommand = () => {
     if (!step.commands || step.commands.length === 0) return;
@@ -91,10 +61,6 @@ export function WalkthroughStep({ step, isCompleted, onToggleComplete, stepNumbe
 
   const renderInstructionPart = (part: React.ReactNode, partKey: string | number): React.ReactNode => {
     if (typeof part !== 'string') {
-       // If it's an image element or other React node, render it directly
-      if (React.isValidElement(part) && part.type === Image) {
-        return <div className="flex justify-center my-4">{part}</div>;
-      }
       return part;
     }
     
@@ -167,13 +133,11 @@ export function WalkthroughStep({ step, isCompleted, onToggleComplete, stepNumbe
 
   return (
     <Card 
-      ref={cardRef}
       className={cn(
-        "shadow-2xl border-primary/30 ring-1 ring-primary/20 transition-transform duration-100 ease-linear",
-        "bg-card/80 backdrop-blur-md", // Frosted glass effect
-        "h-full flex flex-col" // Ensure card fills height and lays out content vertically
+        "shadow-2xl border-primary/30 ring-1 ring-primary/20",
+        "bg-card/80 backdrop-blur-md", 
+        "h-full flex flex-col" 
       )}
-      style={{ transformStyle: "preserve-3d", willChange: 'transform' }} // Added willChange for performance
     >
       <CardHeader className="pb-4">
         <div className="flex items-center gap-4 mb-2">
