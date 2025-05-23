@@ -8,7 +8,7 @@ import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertTriangle, Info, Lightbulb, ChevronRight } from 'lucide-react'; // Added ChevronRight
+import { AlertTriangle, Info, Lightbulb, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export interface StepContent {
@@ -32,33 +32,70 @@ export function WalkthroughStep({ step, isCompleted, isOpen, onToggleComplete, s
   const { Icon } = step;
 
   const renderInstruction = (instruction: string) => {
-    // Split by backticks, capturing the content within them
-    const parts = instruction.split(/(`[^`]+`)/g);
+    // Regex to find URLs.
+    const urlRegex = /(\b(?:https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])|(\bwww\.[-A-Z0-9+&@#\/%=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])|(\b[A-Z0-9.-]+\.(?:com|org|net|edu|gov|mil|biz|info|mobi|name|aero|jobs|museum|coop|asia|cat|int|pro|tel|travel|xxx|io|app|dev)\b(?!(?:[^`]*`)|(?:[^<]*<\/code>)|[^\s]*\/))/gi;
+  
+    const parts = instruction.split(/(`[^`]+`)/g); // Split by code blocks first
+  
     return parts.map((part, index) => {
-      if (index % 2 === 1) { // Content within backticks
+      if (index % 2 === 1) { // Content within backticks (code)
         return (
           <code
-            key={index}
+            key={`code-${step.id}-${index}`}
             className="bg-muted px-1.5 py-0.5 rounded-sm font-mono text-sm text-accent shadow-sm border border-border/70"
           >
             {part.slice(1, -1)} {/* Remove backticks */}
           </code>
         );
       }
-      return <React.Fragment key={index}>{part}</React.Fragment>;
+      
+      // For non-code parts, search for URLs
+      let lastIndex = 0;
+      const elements: React.ReactNode[] = [];
+      let match;
+      
+      // Create a new RegExp instance for each use of exec with the global flag
+      const localUrlRegex = new RegExp(urlRegex); 
+      while ((match = localUrlRegex.exec(part)) !== null) {
+        // Add text before the URL
+        if (match.index > lastIndex) {
+          elements.push(<React.Fragment key={`text-${step.id}-${index}-${lastIndex}`}>{part.substring(lastIndex, match.index)}</React.Fragment>);
+        }
+        // Add the URL as a link
+        const url = match[0];
+        const href = url.startsWith('http') || url.startsWith('ftp') || url.startsWith('file') ? url : `https://${url}`;
+        elements.push(
+          <a
+            key={`link-${step.id}-${index}-${match.index}`}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary underline hover:text-primary/80"
+          >
+            {url}
+          </a>
+        );
+        lastIndex = localUrlRegex.lastIndex;
+      }
+      // Add any remaining text after the last URL
+      if (lastIndex < part.length) {
+        elements.push(<React.Fragment key={`text-final-${step.id}-${index}-${lastIndex}`}>{part.substring(lastIndex)}</React.Fragment>);
+      }
+      
+      return elements.length > 0 ? elements : <React.Fragment key={`empty-${step.id}-${index}`}>{part}</React.Fragment>;
     });
   };
 
   return (
     <AccordionItem value={`step-${step.id}`} className="border-b-0 mb-4 last:mb-0">
       <Card className={cn(
-        "transition-all duration-300 ease-in-out", // Base transition
+        "transition-all duration-300 ease-in-out",
         isOpen
-          ? "border-primary ring-2 ring-primary/30 shadow-2xl scale-[1.01]" // Open: specific border, ring, prominent shadow, scale
-          : "shadow-md hover:shadow-lg", // Not open: default shadow behavior
+          ? "border-primary ring-2 ring-primary/30 shadow-2xl scale-[1.01]"
+          : "shadow-md hover:shadow-lg",
         isOpen
-          ? (isCompleted ? "bg-primary/10" : "bg-primary/5") // Open: background based on completion
-          : (isCompleted ? "bg-secondary/50 border-primary/50" : "bg-card") // Not open: existing logic for background and completed border
+          ? (isCompleted ? "bg-primary/10" : "bg-primary/5")
+          : (isCompleted ? "bg-secondary/50 border-primary/50" : "bg-card")
       )}>
         <AccordionTrigger className="p-6 hover:no-underline">
           <div className="flex items-center justify-between w-full">
