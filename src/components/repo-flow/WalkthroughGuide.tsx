@@ -12,65 +12,65 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 const initialSteps: StepContent[] = [
   {
     id: 'init-git',
-    title: 'Initialize Git Repository',
+    title: 'Start Tracking Your Project with Git',
     instructions: [
       "This guide is for when you're working with the **code** of your Next.js frontend, especially if you've started with a Firebase tool and are now ready to manage your project files directly. If you were using a visual prototyper, ensure you've switched to a 'Code view' or have access to your project's file directory before starting these terminal commands.",
-      "Open your project's root folder in your local terminal (this might be within your code editor like VS Code, or a separate terminal window).",
-      "Run the command `git init` to initialize a new Git repository. This creates a hidden `.git` directory that tracks your project's history."
+      "Open your project's main folder in a terminal. (Your code editor, like VS Code, often has a built-in terminal, or you can use a separate one).",
+      "Time to tell Git to start keeping track of your project! Type `git init` in your terminal. This command sets up Git in your project folder so it can start saving your work's history."
     ],
     commands: ['git init'],
     Icon: GitBranch,
   },
   {
     id: 'add-files',
-    title: 'Add Files to Staging',
+    title: 'Get Your Files Ready for Saving',
     instructions: [
-      "After initializing Git, you need to tell Git which files to track.",
-      "Run `git add .` to add all files in the current directory and subdirectories to the staging area. Staging is like a draft space for your next commit."
+      "Now that Git is set up, you need to tell it which files you want to include in your next save.",
+      "Type `git add .` (don't forget the dot!) in your terminal. This tells Git to get *all* your project files ready to be saved. Think of it like putting all your documents in a pile before you file them away."
     ],
     commands: ['git add .'],
     Icon: Package,
   },
   {
     id: 'commit-changes',
-    title: 'Commit Your Changes',
+    title: 'Save Your Changes (Make a "Commit")',
     instructions: [
-      "Commit your staged changes to the local repository's history.",
-      "Run `git commit -m \"Initial commit\"` to save your changes. The message should briefly describe the changes made in this commit."
+      "Now, let's officially save the files you just prepared. This is called a 'commit' in Git language.",
+      "Type `git commit -m \"Initial commit\"` in your terminal. This saves your files. The part in quotes is a message to remind you (or others) what this save was about. 'Initial commit' is a common message for the very first save."
     ],
     commands: ['git commit -m "Initial commit"'],
     Icon: CheckCircle,
   },
   {
     id: 'create-github-repo',
-    title: 'Create GitHub Repository',
+    title: 'Create a Home for Your Code on GitHub',
     instructions: [
-      "Go to GitHub and log in.",
+      "Head over to GitHub and sign in to your account.",
       "Click the `+` icon in the top right corner and select 'New repository'.",
-      "Give your repository a name (e.g., `my-firebase-next-app`). You can add an optional description.",
-      "Choose public or private. For deploying to Vercel, public or private works.",
+      "Choose a name for your project on GitHub (like `my-cool-app`). You can also write a short description if you like.",
+      "Decide if you want your project to be public (anyone can see it) or private (only you and people you choose can see it). Either way is fine for Vercel."
     ],
     alerts: [
       {
         type: 'warning',
-        title: 'Critical Step!',
-        message: "Do NOT initialize this new GitHub repository with a README, .gitignore, or license file. You have already done this locally and will push your existing project files."
+        title: 'Super Important!',
+        message: "When GitHub asks if you want to add files like a README, .gitignore, or license, **don't check any of those boxes!** Your project already has these, and we'll upload them from your computer."
       }
     ],
     Icon: Github,
   },
   {
     id: 'link-remote',
-    title: 'Link Local to Remote Repository',
+    title: "Connect Your Computer's Project to GitHub",
     instructions: [
-      "On your new GitHub repository page, find the repository URL (HTTPS or SSH).",
-      "In your local terminal, run `git remote add origin <your-repo-url>`. This command tells your local Git repo where the remote 'origin' is located."
+      "After creating your project on GitHub, you'll see a special web address (URL) for it. It usually starts with `https://`.",
+      "Back in your terminal, type `git remote add origin <your-repo-url>`. This command tells Git on your computer where your project lives on GitHub. (Make sure to replace `<your-repo-url>` with the actual web address you copied from GitHub!)"
     ],
     alerts: [
       {
         type: 'info',
-        title: 'Remember',
-        message: "Replace `<your-repo-url>` with the actual URL from your GitHub repository page."
+        title: 'Remember!',
+        message: "Replace `<your-repo-url>` with the actual URL from your GitHub repository page. Just copy and paste it!"
       }
     ],
     commands: ['git remote add origin https://github.com/your-username/your-repo-name.git'],
@@ -78,16 +78,16 @@ const initialSteps: StepContent[] = [
   },
   {
     id: 'push-github',
-    title: 'Push to GitHub',
+    title: 'Send Your Code to GitHub',
     instructions: [
-      "Upload your local commits to the remote repository on GitHub.",
-      "Run `git push -u origin main`. The `-u` flag sets the upstream branch for future pushes and pulls."
+      "Now it's time to send all the changes you've saved on your computer up to GitHub.",
+      "Type `git push -u origin main` in your terminal. This 'pushes' (sends) your code. The `-u origin main` part is just a way to tell Git to remember this connection for next time, making future pushes simpler."
     ],
     alerts: [
       {
         type: 'note',
         title: 'Branch Name Check',
-        message: "Your default branch might be named `main` (common now) or `master` (older default). Ensure you use the correct one for your repository."
+        message: "Heads up: Your project's main code line (called a 'branch') might be named `main` or `master`. Make sure the command uses the correct name for your project. `main` is most common these days."
       }
     ],
     commands: ['git push -u origin main'],
@@ -95,41 +95,41 @@ const initialSteps: StepContent[] = [
   },
   {
     id: 'vercel-signup',
-    title: 'Sign Up/Log In to Vercel',
+    title: 'Get Ready with Vercel',
     instructions: [
-      "Go to Vercel.",
-      "Sign up for a new account or log in. It's often easiest to sign up/log in using your GitHub account for seamless integration."
+      "Now, let's go to Vercel.",
+      "If you don't have a Vercel account, sign up for one. If you do, just log in. The easiest way is often to use your GitHub account to sign up or log in – it makes things smoother!"
     ],
     Icon: Cloud,
   },
   {
     id: 'vercel-import',
-    title: 'Import Project to Vercel',
+    title: 'Bring Your GitHub Project into Vercel',
     instructions: [
-      "Once logged into Vercel, find the 'Add New...' button or 'Import Project' option on your dashboard.",
-      "Select your GitHub account and then choose the repository containing your Firebase Next.js project.",
-      "Vercel will typically auto-detect that it's a Next.js project."
+      "After logging into Vercel, look for a button like 'Add New...' or 'Import Project'. This is usually on your main dashboard.",
+      "Vercel will ask to connect to your GitHub. Allow it, and then pick the project (repository) you just put on GitHub.",
+      "Vercel is smart and usually figures out it's a Next.js project all by itself!"
     ],
     Icon: Settings,
   },
   {
     id: 'vercel-deploy',
-    title: 'Configure and Deploy Next.js Frontend',
+    title: 'Set Up and Launch Your Next.js App on Vercel',
     instructions: [
-      "Vercel will show you project settings. For most Next.js apps (including those using Firebase services on the backend), the defaults are often fine.",
-      "You can set environment variables here if your application needs them (e.g., Firebase client API keys and configuration for your Next.js app). These are typically prefixed with `NEXT_PUBLIC_` if used client-side.",
-      "Click the 'Deploy' button. Vercel will build your Next.js frontend and deploy it."
+      "Vercel will show some settings for your project. For most Next.js apps that work with Firebase, the standard settings Vercel suggests are usually perfect.",
+      "If your app needs any secret codes or special settings for Firebase (like API keys), you can add them here in Vercel. For Next.js, these often start with `NEXT_PUBLIC_` if your website's visitors need to use them (otherwise, keep them secret!).",
+      "Hit the 'Deploy' button! Vercel will then work its magic, get your Next.js app ready, and put it online."
     ],
     alerts: [
        {
         type: 'info',
-        title: 'Deployment Scope',
-        message: "Vercel will host your Next.js frontend. Your Firebase backend services (like Firestore, Authentication, Cloud Functions) continue to be managed through the Firebase console and are accessed by your frontend as configured."
+        title: 'How Vercel and Firebase Work Together',
+        message: "Good to know: Vercel takes care of putting your Next.js website online. All your Firebase stuff (like databases, user logins, and special functions) still lives in Firebase and is managed from your Firebase console. Your website will talk to Firebase just like you set it up."
       },
       {
         type: 'note',
-        title: 'Live URL',
-        message: "After Vercel finishes building, it will assign your project a unique URL. You can monitor the build logs. Once deployed, you'll get a live link to your Next.js app!"
+        title: 'Your App is Live!',
+        message: "Once Vercel is done, it will give you a special web address (URL) where your app is live on the internet! You can watch its progress, and soon you'll have a link to share."
       }
     ],
     Icon: Rocket,
@@ -167,7 +167,7 @@ export function WalkthroughGuide() {
       <CardHeader>
         <CardTitle className="text-2xl flex items-center gap-2">
           <GitBranch className="h-7 w-7 text-primary" />
-          Deployment Walkthrough
+          Your Friendly Deployment Walkthrough
         </CardTitle>
         <div className="pt-2">
           <Progress value={progress} className="w-full h-3" />
