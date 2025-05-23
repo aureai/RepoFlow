@@ -14,8 +14,8 @@ const initialSteps: StepContent[] = [
     id: 'init-git',
     title: 'Start Tracking Your Project with Git',
     instructions: [
-      "This guide is for when you're working with the **code** of your Next.js frontend, especially if you've started with a Firebase tool and are now ready to manage your project files directly. If you were using a visual prototyper, ensure you've switched to a 'Code view' or have access to your project's file directory before starting these terminal commands.",
-      "Open your project's main folder in a terminal. (Your code editor, like VS Code, often has a built-in terminal, or you can use a separate one).",
+      "First things first! If you were just using a Firebase visual prototyper, make sure you've clicked on the 'Switch to Code' option (you might see an icon for this, maybe in the top right corner of your tool). This guide is for when you can see all your project's files and folders (the code!).",
+      "Open your project's main folder in a terminal. (Your code editor, like VS Code, often has a built-in terminal, or you can use a separate one like Terminal on Mac or Command Prompt on Windows).",
       "Time to tell Git to start keeping track of your project! Type `git init` in your terminal. This command sets up Git in your project folder so it can start saving your work's history."
     ],
     commands: ['git init'],
@@ -45,7 +45,7 @@ const initialSteps: StepContent[] = [
     id: 'create-github-repo',
     title: 'Create a Home for Your Code on GitHub',
     instructions: [
-      "Head over to GitHub and sign in to your account.",
+      "Head over to GitHub and sign in to your account (or create one if you're new!).",
       "Click the `+` icon in the top right corner and select 'New repository'.",
       "Choose a name for your project on GitHub (like `my-cool-app`). You can also write a short description if you like.",
       "Decide if you want your project to be public (anyone can see it) or private (only you and people you choose can see it). Either way is fine for Vercel."
@@ -64,7 +64,7 @@ const initialSteps: StepContent[] = [
     title: "Connect Your Computer's Project to GitHub",
     instructions: [
       "After creating your project on GitHub, you'll see a special web address (URL) for it. It usually starts with `https://`.",
-      "Back in your terminal, type `git remote add origin <your-repo-url>`. This command tells Git on your computer where your project lives on GitHub. (Make sure to replace `<your-repo-url>` with the actual web address you copied from GitHub!)"
+      "Back in your terminal, type `git remote add origin <your-repo-url>`. This command tells Git on your computer where your project lives on GitHub."
     ],
     alerts: [
       {
