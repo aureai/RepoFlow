@@ -129,7 +129,7 @@ export function WalkthroughStep({ step, isCompleted, isOpen, onToggleComplete, s
                     <Alert key={index} variant={alertVariant} className={cn(alert.type === 'info' || alert.type === 'note' ? "border-primary/30 bg-primary/10" : "")}>
                       {React.cloneElement(alertIcon, { className: cn(alertIcon.props.className, alert.type === 'warning' ? "" : "text-primary") })}
                       <AlertTitle className={cn(alert.type === 'warning' ? "" : "text-primary/90")}>{alert.title || defaultTitle}</AlertTitle>
-                      <AlertDescription className={cn(alert.type === 'warning' ? "" : "text-foreground/80")}>
+                      <AlertDescription className={cn(alert.type === 'warning' ? "" : "text-foreground font-medium")}>
                         {renderInstruction(alert.message)}
                       </AlertDescription>
                     </Alert>
