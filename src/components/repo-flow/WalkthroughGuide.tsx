@@ -127,10 +127,10 @@ export function WalkthroughGuide() {
 
   return (
     <div className="flex flex-col items-center w-full">
-      <div className="w-full max-w-4xl relative"> {/* Parent for step and absolute buttons */}
+      <div className="w-full max-w-5xl relative"> {/* Parent for step and absolute buttons */}
         <div className="w-full min-h-[600px] md:min-h-[700px] flex items-center justify-center relative overflow-hidden mb-8">
           {/* Step Content - key change triggers animation */}
-          <div key={currentStepIndex} className={`w-full max-w-4xl aspect-video ${animationClass}`}>
+          <div key={currentStepIndex} className={`w-full max-w-5xl min-h-[600px] md:min-h-[700px] flex items-center justify-center ${animationClass}`}>
             <WalkthroughStep
               step={currentStepData}
               stepNumber={currentStepIndex + 1}
