@@ -2,7 +2,6 @@
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { WalkthroughGuide } from '@/components/repo-flow/WalkthroughGuide';
-import { EmbeddedTerminal } from '@/components/repo-flow/EmbeddedTerminal';
 import { MouseGlowEffect } from '@/components/mouse-glow-effect';
 import { FAQ } from '@/components/repo-flow/FAQ';
 
@@ -10,8 +9,8 @@ export default function HomePage() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <Header />
-      <main className="flex-grow container mx-auto px-4 py-8 md:py-12">
-        <MouseGlowEffect className="rounded-lg">
+      <main className="flex-grow container mx-auto px-4 py-8 md:py-12 flex flex-col items-center">
+        <MouseGlowEffect className="rounded-lg w-full max-w-5xl">
           <section className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-extrabold text-foreground mb-4">
               RepoFlow: Your Guide to Publishing Your Firebase App
@@ -21,16 +20,13 @@ export default function HomePage() {
             </p>
           </section>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2">
-              <WalkthroughGuide />
-            </div>
-
-            <div className="space-y-8">
-              <EmbeddedTerminal />
-            </div>
+          <div className="w-full mb-12">
+            <WalkthroughGuide />
           </div>
-          <FAQ />
+          
+          <div className="w-full max-w-4xl">
+            <FAQ />
+          </div>
         </MouseGlowEffect>
       </main>
       <Footer />

@@ -1,10 +1,9 @@
 
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import type { LucideIcon } from 'lucide-react';
-import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -12,28 +11,63 @@ import { Button } from '@/components/ui/button';
 import { AlertTriangle, Info, Lightbulb, ChevronRight, Copy, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import Image from 'next/image';
 
 export interface StepContent {
   id: string;
   title: string;
   instructions: React.ReactNode[];
-  commands?: string[];
   Icon?: LucideIcon;
+  commands?: string[];
   alerts?: { type: 'warning' | 'info' | 'note'; title?: string; message: string | React.ReactNode }[];
 }
 
 interface WalkthroughStepProps {
   step: StepContent;
   isCompleted: boolean;
-  isOpen: boolean;
   onToggleComplete: (id: string, completed: boolean) => void;
   stepNumber: number;
+  totalSteps: number;
 }
 
-export function WalkthroughStep({ step, isCompleted, isOpen, onToggleComplete, stepNumber }: WalkthroughStepProps) {
+export function WalkthroughStep({ step, isCompleted, onToggleComplete, stepNumber }: WalkthroughStepProps) {
   const { Icon } = step;
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const card = cardRef.current;
+    if (!card) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      
+      const rotateX = ((y - centerY) / centerY) * -5; // Max 5 deg tilt for X
+      const rotateY = ((x - centerX) / centerX) * 5;  // Max 5 deg tilt for Y
+      
+      card.style.transform = `perspective(1500px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`;
+    };
+
+    const handleMouseLeave = () => {
+      card.style.transform = 'perspective(1500px) rotateX(0deg) rotateY(0deg) scale(1)';
+    };
+
+    card.addEventListener('mousemove', handleMouseMove);
+    card.addEventListener('mouseleave', handleMouseLeave);
+    // Set initial transform for smooth entry if animated by parent
+    card.style.transform = 'perspective(1500px) rotateX(0deg) rotateY(0deg) scale(1)';
+
+
+    return () => {
+      card.removeEventListener('mousemove', handleMouseMove);
+      card.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, [step]); // Re-run if step changes to reset event listeners, though step content changing is main driver
 
   const handleCopyCommand = () => {
     if (!step.commands || step.commands.length === 0) return;
@@ -44,7 +78,7 @@ export function WalkthroughStep({ step, isCompleted, isOpen, onToggleComplete, s
         title: "Copied!",
         description: "Command copied to clipboard.",
       });
-      setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
+      setTimeout(() => setCopied(false), 2000);
     }).catch(err => {
       console.error('Failed to copy: ', err);
       toast({
@@ -55,11 +89,15 @@ export function WalkthroughStep({ step, isCompleted, isOpen, onToggleComplete, s
     });
   };
 
-  const renderInstructionPart = (part: string | React.ReactNode, partKey: string | number): React.ReactNode => {
+  const renderInstructionPart = (part: React.ReactNode, partKey: string | number): React.ReactNode => {
     if (typeof part !== 'string') {
-      return part; 
+       // If it's an image element or other React node, render it directly
+      if (React.isValidElement(part) && part.type === Image) {
+        return <div className="flex justify-center my-4">{part}</div>;
+      }
+      return part;
     }
-
+    
     const keywordMap: Record<string, {url: string; displayText: string}> = {
       'github': { url: 'https://github.com', displayText: 'GitHub' },
       'github.com': { url: 'https://github.com', displayText: 'GitHub.com' },
@@ -127,139 +165,123 @@ export function WalkthroughStep({ step, isCompleted, isOpen, onToggleComplete, s
     });
   };
 
-
   return (
-    <AccordionItem value={`step-${step.id}`} className="border-b-0 mb-4 last:mb-0">
-      <Card className={cn(
-        "transition-all duration-300 ease-in-out",
-        isOpen
-          ? "border-primary ring-2 ring-primary/30 shadow-2xl scale-[1.01]"
-          : "shadow-md hover:shadow-lg",
-        isOpen
-          ? (isCompleted ? "bg-primary/10" : "bg-primary/5")
-          : (isCompleted ? "bg-secondary/50 border-primary/50" : "bg-card")
-      )}>
-        <AccordionTrigger className="p-6 hover:no-underline">
-          <div className="flex items-center justify-between w-full">
-            <div className="flex items-center gap-4">
-              {Icon && <Icon className={cn("h-8 w-8 transition-colors", (isOpen || isCompleted) ? "text-primary" : "text-muted-foreground")} />}
-              {!Icon && 
-                <div className={cn(
-                  "flex items-center justify-center h-8 w-8 rounded-full border-2 text-lg font-semibold transition-colors", 
-                  (isOpen || isCompleted) ? "border-primary text-primary bg-primary/10" : "border-muted-foreground text-muted-foreground"
-                )}>
-                  {stepNumber}
-                </div>
+    <Card 
+      ref={cardRef}
+      className={cn(
+        "shadow-2xl border-primary/30 ring-1 ring-primary/20 transition-transform duration-100 ease-linear",
+        "bg-card/80 backdrop-blur-md" // Frosted glass effect
+      )}
+      style={{ transformStyle: "preserve-3d", willChange: 'transform' }} // Added willChange for performance
+    >
+      <CardHeader className="pb-4">
+        <div className="flex items-center gap-4 mb-2">
+          {Icon && <Icon className="h-10 w-10 text-primary flex-shrink-0" />}
+          {!Icon && 
+            <div className="flex items-center justify-center h-10 w-10 rounded-full border-2 border-primary text-xl font-semibold text-primary bg-primary/10 flex-shrink-0">
+              {stepNumber}
+            </div>
+          }
+          <CardTitle className="text-3xl font-bold text-primary">{step.title}</CardTitle>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {step.instructions.map((instrNode, index) => (
+          <div key={index} className="flex items-start">
+            <ChevronRight className="h-5 w-5 mr-2 mt-[3px] flex-shrink-0 text-primary" />
+            <p className="leading-relaxed text-foreground/90">
+              {renderInstructionPart(instrNode, index)}
+            </p>
+          </div>
+        ))}
+
+        {step.alerts && step.alerts.length > 0 && (
+          <div className="space-y-3 mt-4">
+            {step.alerts.map((alert, index) => {
+              let alertIcon, alertVariant: "default" | "destructive", defaultTitle;
+              switch (alert.type) {
+                case 'warning':
+                  alertIcon = <AlertTriangle className="h-5 w-5" />;
+                  alertVariant = 'destructive';
+                  defaultTitle = 'Warning!';
+                  break;
+                case 'info':
+                  alertIcon = <Info className="h-5 w-5" />; 
+                  alertVariant = 'default';
+                  defaultTitle = 'Important Info';
+                  break;
+                case 'note':
+                  alertIcon = <Lightbulb className="h-5 w-5" />; 
+                  alertVariant = 'default';
+                  defaultTitle = 'Quick Tip';
+                  break;
+                default:
+                  alertIcon = <Info className="h-5 w-5" />;
+                  alertVariant = 'default';
+                  defaultTitle = 'Note';
               }
-              <h4 className={cn("text-xl font-semibold text-left transition-colors", (isOpen || isCompleted) ? "text-primary" : "text-foreground")}>{step.title}</h4>
-            </div>
-            <div className="flex items-center space-x-2 ml-auto pl-4 flex-shrink-0">
-              <Checkbox
-                id={`step-checkbox-${step.id}`}
-                checked={isCompleted}
-                onCheckedChange={(checked) => onToggleComplete(step.id, !!checked)}
-                onClick={(e) => e.stopPropagation()} 
-                aria-label={`Mark step ${step.title} as complete`}
-                className={cn(isCompleted ? "border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground" : "")}
-              />
-              <Label 
-                htmlFor={`step-checkbox-${step.id}`} 
-                className={cn("text-sm transition-colors", (isOpen || isCompleted) ? "text-primary" : "text-muted-foreground")}
+              return (
+                <Alert key={index} variant={alertVariant} className={cn(alert.type === 'info' || alert.type === 'note' ? "border-primary/30 bg-primary/10" : "")}>
+                  {React.cloneElement(alertIcon, { className: cn(alertIcon.props.className, alert.type === 'warning' ? "" : "text-primary") })}
+                  <AlertTitle className={cn(alert.type === 'warning' ? "" : "text-primary/90")}>{alert.title || defaultTitle}</AlertTitle>
+                  <AlertDescription className={cn(alert.type === 'warning' ? "" : "text-foreground font-medium")}>
+                     {typeof alert.message === 'string' ? renderInstructionPart(alert.message, `alert-${index}`) : alert.message}
+                  </AlertDescription>
+                </Alert>
+              );
+            })}
+          </div>
+        )}
+
+        {step.commands && step.commands.length > 0 && (
+          <div className="mt-6">
+            <div className="flex justify-between items-center mb-2">
+              <h5 className="font-medium text-foreground">Example Command(s):</h5>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleCopyCommand}
+                className="text-muted-foreground hover:text-primary"
+                aria-label="Copy command to clipboard"
               >
-                {isCompleted ? "Completed" : "Mark complete"}
-              </Label>
+                {copied ? (
+                  <>
+                    <Check className="mr-2 h-4 w-4 text-green-500" />
+                    Copied!
+                  </>
+                ) : (
+                  <>
+                    <Copy className="mr-2 h-4 w-4" />
+                    Copy
+                  </>
+                )}
+              </Button>
             </div>
+            <pre className="bg-black text-green-400 p-4 rounded-md overflow-x-auto shadow-inner">
+              <code className="text-sm font-mono whitespace-pre-wrap">
+                {step.commands.join('\n')}
+              </code>
+            </pre>
           </div>
-        </AccordionTrigger>
-        <AccordionContent className="px-6 pb-6">
-          <div className="space-y-4">
-            {step.instructions.map((instrNode, index) => (
-              <div key={index} className="flex items-start">
-                <ChevronRight 
-                  className={cn(
-                    "h-5 w-5 mr-2 mt-[3px] flex-shrink-0 transition-colors", 
-                    (isOpen || isCompleted) ? "text-primary" : "text-muted-foreground"
-                  )} 
-                />
-                <p className={cn("leading-relaxed", isOpen ? "text-foreground/90" : "text-muted-foreground")}>
-                  {renderInstructionPart(instrNode, index)}
-                </p>
-              </div>
-            ))}
-
-            {step.alerts && step.alerts.length > 0 && (
-              <div className="space-y-3 mt-4">
-                {step.alerts.map((alert, index) => {
-                  let alertIcon, alertVariant: "default" | "destructive", defaultTitle;
-                  switch (alert.type) {
-                    case 'warning':
-                      alertIcon = <AlertTriangle className="h-5 w-5" />;
-                      alertVariant = 'destructive';
-                      defaultTitle = 'Warning!';
-                      break;
-                    case 'info':
-                      alertIcon = <Info className="h-5 w-5" />; 
-                      alertVariant = 'default';
-                      defaultTitle = 'Important Info';
-                      break;
-                    case 'note':
-                      alertIcon = <Lightbulb className="h-5 w-5" />; 
-                      alertVariant = 'default';
-                      defaultTitle = 'Quick Tip';
-                      break;
-                    default:
-                      alertIcon = <Info className="h-5 w-5" />;
-                      alertVariant = 'default';
-                      defaultTitle = 'Note';
-                  }
-                  return (
-                    <Alert key={index} variant={alertVariant} className={cn(alert.type === 'info' || alert.type === 'note' ? "border-primary/30 bg-primary/10" : "")}>
-                      {React.cloneElement(alertIcon, { className: cn(alertIcon.props.className, alert.type === 'warning' ? "" : "text-primary") })}
-                      <AlertTitle className={cn(alert.type === 'warning' ? "" : "text-primary/90")}>{alert.title || defaultTitle}</AlertTitle>
-                      <AlertDescription className={cn(alert.type === 'warning' ? "" : "text-foreground font-medium")}>
-                        {typeof alert.message === 'string' ? renderInstructionPart(alert.message, `alert-${index}`) : alert.message}
-                      </AlertDescription>
-                    </Alert>
-                  );
-                })}
-              </div>
-            )}
-
-            {step.commands && step.commands.length > 0 && (
-              <div className="mt-6">
-                <div className="flex justify-between items-center mb-2">
-                  <h5 className="font-medium text-foreground">Example Command(s):</h5>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleCopyCommand}
-                    className="text-muted-foreground hover:text-primary"
-                    aria-label="Copy command to clipboard"
-                  >
-                    {copied ? (
-                      <>
-                        <Check className="mr-2 h-4 w-4 text-green-500" />
-                        Copied!
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="mr-2 h-4 w-4" />
-                        Copy
-                      </>
-                    )}
-                  </Button>
-                </div>
-                <pre className="bg-black text-green-400 p-4 rounded-md overflow-x-auto shadow-inner">
-                  <code className="text-sm font-mono whitespace-pre-wrap">
-                    {step.commands.join('\n')}
-                  </code>
-                </pre>
-              </div>
-            )}
-          </div>
-        </AccordionContent>
-      </Card>
-    </AccordionItem>
+        )}
+      </CardContent>
+      <CardFooter className="pt-6">
+        <div className="flex items-center space-x-2 ml-auto">
+          <Checkbox
+            id={`step-checkbox-${step.id}`}
+            checked={isCompleted}
+            onCheckedChange={(checked) => onToggleComplete(step.id, !!checked)}
+            aria-label={`Mark step ${step.title} as complete`}
+            className={cn(isCompleted ? "border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground" : "")}
+          />
+          <Label 
+            htmlFor={`step-checkbox-${step.id}`} 
+            className={cn("text-sm", isCompleted ? "text-primary" : "text-muted-foreground")}
+          >
+            {isCompleted ? "Completed!" : "Mark as complete"}
+          </Label>
+        </div>
+      </CardFooter>
+    </Card>
   );
 }
-

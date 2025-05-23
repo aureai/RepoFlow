@@ -1,14 +1,15 @@
 
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { Github, GitBranch, Cloud, UploadCloud, Settings, CheckCircle, Package, Rocket, Link as LinkIcon, Info, Lightbulb, AlertTriangle, MonitorPlay, Save, TerminalSquareIcon } from 'lucide-react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Github, GitBranch, Cloud, UploadCloud, Settings, CheckCircle, Package, Rocket, Link as LinkIcon, Info, Lightbulb, AlertTriangle, MonitorPlay, Save, TerminalSquareIcon, ArrowLeft, ArrowRight } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import Image from 'next/image';
-import { Accordion } from '@/components/ui/accordion';
 import { Progress } from '@/components/ui/progress';
 import { WalkthroughStep, type StepContent } from './WalkthroughStep';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 const initialSteps: StepContent[] = [
   {
@@ -16,21 +17,21 @@ const initialSteps: StepContent[] = [
     title: "Let's Open Your Coding Tools",
     Icon: MonitorPlay,
     instructions: [
-      "Alright, you're in 'Code View' and can see all your project's files and folders – fantastic! Now, let's get your main coding tools ready.",
-      "Inside your code editor (which might be Firebase Studio itself if you just switched, or another editor you like), we need to open two important panels:",
+      "Hey there! So, you've switched to 'Code View' in your Firebase tool (or you've got your Next.js project files open in your favorite editor) – awesome! You should be seeing all your project's files and folders. Now, let's get your main coding tools ready.",
+      "Inside your code editor, we need to open two important panels:",
       <ul key="tools-list" className="list-disc list-inside pl-4 my-2 space-y-1">
-        <li><strong className="text-primary">Terminal:</strong> This is where you'll type commands (like telling your computer what to do).</li>
-        <li><strong className="text-primary">Source Control:</strong> This helps you keep track of changes to your files.</li>
+        <li><strong className="text-primary">Terminal:</strong> This is like a command center where you'll type instructions for your computer.</li>
+        <li><strong className="text-primary">Source Control:</strong> This handy panel helps you keep track of changes to your files (think of it as a history book for your code).</li>
       </ul>,
-      "Usually, you can find these by going to the 'View' menu at the top of your editor. From there, select 'Terminal' and then 'Source Control'.",
-      "(Handy shortcuts are often `Ctrl+\`` for Terminal and `Ctrl+Shift+G` for Source Control on Windows/Linux, or `Cmd+\`` and `Cmd+Shift+G` on a Mac).",
-      <div key="editor-image" className="my-4 rounded-md overflow-hidden border border-border shadow-md">
+      "Usually, you can find these by going to the 'View' menu at the top of your editor. From there, select 'Terminal' (or 'New Terminal'), and then 'Source Control' (it might also be called 'Git' or show a branch icon).",
+      "(Handy shortcuts are often `Ctrl+\`` (backtick) for Terminal and `Ctrl+Shift+G` for Source Control on Windows/Linux, or `Cmd+\`` and `Cmd+Shift+G` on a Mac).",
+      <div key="editor-image" className="my-4 rounded-md overflow-hidden border border-border shadow-md max-w-full mx-auto">
         <Image
           src="https://placehold.co/600x350.png"
           alt="Code editor view menu showing Terminal and Source Control options"
           width={600}
           height={350}
-          className="w-full h-auto"
+          className="w-full h-auto object-contain max-h-[300px] md:max-h-[350px]"
           data-ai-hint="code editor view menu"
         />
       </div>
@@ -41,7 +42,7 @@ const initialSteps: StepContent[] = [
     title: 'Save Your Work with Git',
     Icon: Save,
     instructions: [
-      "Before we send your code to GitHub, let's save a snapshot of your project using Git. Think of it like creating a named version of your work so you can always come back to it.",
+      "Before we send your code to its new online home on GitHub, let's save a snapshot of your project right here on your computer using Git. Think of it like creating a named checkpoint for your work, so you can always come back to this version if you need to.",
       "In the Terminal you just opened, type these commands one by one. Press Enter after each line:",
     ],
     commands: [
@@ -53,7 +54,7 @@ const initialSteps: StepContent[] = [
       {
         type: 'info',
         title: "What are these commands doing?",
-        message: "`git init`: This sets up Git to start tracking your project (you usually only do this once).\n`git add .`: This tells Git to get all your current project files ready for saving.\n`git commit -m \"...\"`: This actually saves the snapshot with a message. You can change the message inside the quotes to describe what you did!"
+        message: <><code>git init</code>: This tells Git to start keeping track of your project (you usually only do this once at the very beginning).<br/><code>git add .</code>: This command tells Git to get ALL your current project files ready for saving (it 'stages' them).<br/><code>git commit -m "..."</code>: This actually saves the snapshot (the 'commit') with a message. You can change the message inside the quotes to describe what you did! Something like "Initial setup of my app" is perfect.</>
       }
     ]
   },
@@ -62,16 +63,16 @@ const initialSteps: StepContent[] = [
     title: 'Create a Home for Your Code on GitHub',
     Icon: Github,
     instructions: [
-      "Time to head over to GitHub.com. If you don't have an account yet, no worries – it's free and quick to create one!",
-      "Once you're signed in, look for a `+` icon (it's usually in the top right corner) and click on 'New repository'.",
-      "Give your repository (your project's online home) a name. Something like `my-awesome-app` works great. You can add a short description too, if you like.",
-      "You'll also choose if your project is public (anyone can see the code) or private (only you and people you invite can see it). For starting out, private is often a good choice.",
+      "Alright, time to visit GitHub! If you don't have an account yet, no worries – it's free and quick to create one.",
+      "Once you're signed in to GitHub, look for a `+` icon (it's usually in the top right corner of the page) and click on 'New repository'.",
+      "A 'repository' (or 'repo' for short) is just what GitHub calls a project's online home. Give your repository a name – something like `my-cool-firebase-app` or `my-nextjs-project` works great. You can add a short description too, if you like.",
+      "You'll also choose if your project is public (anyone on the internet can see the code) or private (only you and people you specifically invite can see it). For starting out, private is often a good choice, and you can always make it public later if you want.",
     ],
     alerts: [
       {
         type: 'warning',
-        title: 'Super Important!',
-        message: "When GitHub asks if you want to add files like a README, .gitignore, or license, **please do NOT check any of those boxes!** Your project already has these important files, and we'll send them up from your computer in the next step."
+        title: 'Heads Up! Super Important!',
+        message: "When GitHub asks if you want to 'Initialize this repository with:' things like a README, .gitignore, or license, **please do NOT check any of those boxes!** Your project (especially if it's a Next.js app) already has these important files, and we'll send them up from your computer in the next step. Adding them now on GitHub can cause a bit of a mix-up later."
       }
     ],
   },
@@ -80,8 +81,8 @@ const initialSteps: StepContent[] = [
     title: 'Send Your Code to GitHub',
     Icon: UploadCloud,
     instructions: [
-      "Great! After you create your repository on GitHub, it'll show you a page with some commands. We're interested in the part that says something like '…or push an existing repository from the command line'.",
-      "You'll see a few lines of code there. They will look similar to this, but with YOUR GitHub username and YOUR repository name:",
+      "Great job! After you create your new (empty) repository on GitHub, it'll show you a page with some instructions. We're interested in the part that says something like '…or push an existing repository from the command line'.",
+      "You'll see a few lines of code there. They will look very similar to this, but with YOUR GitHub username and YOUR repository name filled in automatically:",
     ],
     commands: [
       'git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPOSITORY_NAME.git',
@@ -92,12 +93,12 @@ const initialSteps: StepContent[] = [
        {
         type: 'note',
         title: 'Copy & Paste Carefully!',
-        message: "This is the magic part! Copy ALL those lines exactly as GitHub shows them. Then, pop back to the Terminal in your code editor (like Firebase Studio) and paste them in. Press Enter. This uploads your local code to your new GitHub repository!"
+        message: "This is the magic part! Carefully copy ALL those lines exactly as GitHub shows them (usually there's a handy copy button next to them). Then, pop back to the Terminal in your code editor (like Firebase Studio) and paste them in. Press Enter after pasting. This tells your local Git where your GitHub repo is and then uploads your local code to it!"
       },
       {
         type: 'info',
         title: 'Quick Note on "main"',
-        message: "GitHub might use `main` or `master` for the main branch name in its examples. The commands they provide usually handle this for you. `main` is the modern standard, so you'll see that a lot."
+        message: "You might see GitHub use `main` or sometimes `master` for the primary branch name in its examples. The commands GitHub provides usually handle this for you by renaming your local branch to `main` if needed. `main` is the modern standard, so that's what we're aiming for."
       }
     ],
   },
@@ -106,92 +107,109 @@ const initialSteps: StepContent[] = [
     title: 'Go Live with Vercel!',
     Icon: Rocket,
     instructions: [
-      "Fantastic! Your code is now safely stored on GitHub. The final step is to get your website live on the internet using Vercel.",
-      "Head over to Vercel.com. If you're new, you can sign up (using your GitHub account makes it super easy!) or just log in.",
-      "Once you're on your Vercel dashboard, look for a button like 'Add New...' and then choose 'Project'.",
-      "Vercel will ask to connect to your GitHub account. Go ahead and allow it. Then, you'll be able to pick the GitHub repository you just created and pushed your code to.",
-      "Vercel is pretty smart and usually detects that you have a Next.js project. The default settings it suggests are almost always perfect to get started.",
+      "Woohoo! Your code is now safely backed up and stored on GitHub. The final big step is to get your website live on the internet using Vercel.",
+      "Head over to Vercel. If you're new, you can sign up (using your GitHub account makes it super easy!) or just log in.",
+      "Once you're on your Vercel dashboard, look for a button like 'Add New...' or 'Import Project' and then choose 'Project'.",
+      "Vercel will ask to connect to your GitHub account (if it's not already connected). Go ahead and allow it. Then, you'll be able to 'Import' or select the GitHub repository you just created and pushed your code to.",
+      "Vercel is pretty smart and usually detects that you have a Next.js project. The default settings it suggests (like the 'Framework Preset' and 'Build and Output Settings') are almost always perfect to get started. You usually don't need to change anything here.",
       "All that's left is to hit the 'Deploy' button!",
     ],
     alerts: [
       {
         type: 'info',
         title: 'How Vercel and Firebase Play Together',
-        message: "Just so you know, Vercel will take care of building and hosting your Next.js website (the part users see and interact with). All your Firebase backend magic (like databases, user sign-ins, Cloud Functions) still lives in Firebase and is managed from your Firebase console. Your Vercel site will talk to your Firebase services just like you've set it up in your code!"
+        message: "Just so you know: Vercel will take care of building your Next.js app (the part users see and interact with – the 'frontend') and hosting it online. All your Firebase backend magic (like your database, user sign-ins, Cloud Functions, etc.) still lives in Firebase and is managed from your Firebase console. Your Vercel-hosted site will talk to your Firebase services just like you've set it up in your code! You might need to add your Firebase project's configuration details (like API keys) as 'Environment Variables' in your Vercel project settings for it to connect properly."
       },
       {
         type: 'note',
         title: 'Your App is Live!',
-        message: "Vercel will show you its progress. When it's all done (usually just a few minutes), it'll give you a special web address (URL). That's where your app is live on the internet for anyone to visit! 🎉 Pretty cool, right?"
+        message: "Vercel will show you its progress as it builds and deploys your app. When it's all done (usually just a few minutes), it'll give you a special web address (URL). That's it – your app is live on the internet for anyone to visit! 🎉 Pretty cool, right?"
       }
     ],
   },
 ];
 
 export function WalkthroughGuide() {
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [completedSteps, setCompletedSteps] = useState<Record<string, boolean>>({});
-  const [progress, setProgress] = useState(0);
-  const [openAccordionItem, setOpenAccordionItem] = useState<string | undefined>(initialSteps[0]?.id ? `step-${initialSteps[0].id}` : undefined);
+  const [animationClass, setAnimationClass] = useState('animate-fade-in-step');
 
+  const totalSteps = initialSteps.length;
 
-  useEffect(() => {
-    const completedCount = Object.values(completedSteps).filter(Boolean).length;
-    setProgress(initialSteps.length > 0 ? (completedCount / initialSteps.length) * 100 : 0);
+  const completedCount = useMemo(() => {
+    return Object.values(completedSteps).filter(Boolean).length;
   }, [completedSteps]);
+
+  const progress = useMemo(() => {
+    return totalSteps > 0 ? (completedCount / totalSteps) * 100 : 0;
+  }, [completedCount, totalSteps]);
 
   const handleToggleComplete = (id: string, completed: boolean) => {
     setCompletedSteps(prev => ({ ...prev, [id]: completed }));
   };
-  
-  const handleOpenNext = (currentId: string) => {
-    const currentIndex = initialSteps.findIndex(step => step.id === currentId);
-    if (currentIndex !== -1 && currentIndex < initialSteps.length - 1) {
-      setOpenAccordionItem(`step-${initialSteps[currentIndex + 1].id}`);
-    } else if (currentIndex === initialSteps.length - 1) {
-       // Optionally, close the last one or do nothing
-       // setOpenAccordionItem(undefined); 
+
+  const goToNextStep = () => {
+    if (currentStepIndex < totalSteps - 1) {
+      setAnimationClass('animate-fade-out-step');
+      setTimeout(() => {
+        setCurrentStepIndex(prev => prev + 1);
+        setAnimationClass('animate-fade-in-step');
+      }, 300); // Match fade-out duration
     }
   };
 
+  const goToPrevStep = () => {
+    if (currentStepIndex > 0) {
+      setAnimationClass('animate-fade-out-step');
+      setTimeout(() => {
+        setCurrentStepIndex(prev => prev - 1);
+        setAnimationClass('animate-fade-in-step');
+      }, 300); // Match fade-out duration
+    }
+  };
+  
+  const currentStepData = initialSteps[currentStepIndex];
 
   return (
-    <Card className="shadow-xl">
-      <CardHeader>
-        <CardTitle className="text-2xl flex items-center gap-2">
-          <GitBranch className="h-7 w-7 text-primary" />
-          Your Friendly Deployment Walkthrough
-        </CardTitle>
-        <div className="pt-2">
-          <Progress value={progress} className="w-full h-3" />
-          <p className="text-sm text-muted-foreground mt-1">{Math.round(progress)}% Complete</p>
+    <div className="flex flex-col items-center w-full">
+      <Card className="w-full shadow-xl mb-6 bg-card/50 backdrop-blur-sm">
+        <CardHeader>
+          <CardTitle className="text-2xl flex items-center justify-center gap-2">
+            <GitBranch className="h-7 w-7 text-primary" />
+            Your Friendly Deployment Walkthrough
+          </CardTitle>
+          <div className="flex justify-between items-center pt-2">
+            <Badge variant="outline" className="text-sm">Step {currentStepIndex + 1} of {totalSteps}</Badge>
+            <div className="w-1/2">
+              <Progress value={progress} className="h-3" />
+              <p className="text-xs text-muted-foreground mt-1 text-right">{Math.round(progress)}% Steps Completed</p>
+            </div>
+          </div>
+        </CardHeader>
+      </Card>
+
+      <div className="w-full min-h-[600px] md:min-h-[700px] flex items-center justify-center relative overflow-hidden mb-8">
+        <div key={currentStepIndex} className={`w-full max-w-3xl ${animationClass}`}>
+          <WalkthroughStep
+            step={currentStepData}
+            stepNumber={currentStepIndex + 1}
+            totalSteps={totalSteps}
+            isCompleted={!!completedSteps[currentStepData.id]}
+            onToggleComplete={handleToggleComplete}
+          />
         </div>
-      </CardHeader>
-      <CardContent>
-        <Accordion 
-          type="single" 
-          collapsible 
-          className="w-full" // Removed space-y-0
-          value={openAccordionItem}
-          onValueChange={(value) => setOpenAccordionItem(value)}
-        >
-          {initialSteps.map((step, index) => (
-            <WalkthroughStep
-              key={step.id}
-              step={step}
-              stepNumber={index + 1}
-              isCompleted={!!completedSteps[step.id]}
-              isOpen={openAccordionItem === `step-${step.id}`}
-              onToggleComplete={(id, completed) => {
-                handleToggleComplete(id, completed);
-                if (completed) {
-                  handleOpenNext(id);
-                }
-              }}
-            />
-          ))}
-        </Accordion>
-      </CardContent>
-    </Card>
+      </div>
+
+      <div className="flex justify-between w-full max-w-3xl">
+        <Button onClick={goToPrevStep} disabled={currentStepIndex === 0} variant="outline" size="lg">
+          <ArrowLeft className="mr-2 h-5 w-5" />
+          Previous
+        </Button>
+        <Button onClick={goToNextStep} disabled={currentStepIndex === totalSteps - 1} variant="default" size="lg">
+          Next
+          <ArrowRight className="ml-2 h-5 w-5" />
+        </Button>
+      </div>
+    </div>
   );
 }
-
