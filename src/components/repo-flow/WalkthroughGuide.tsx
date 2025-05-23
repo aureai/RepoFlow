@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -19,7 +20,9 @@ const initialSteps: StepContent[] = [
     Icon: GitBranch,
     diagramUrl: 'https://placehold.co/600x200.png',
     diagramAlt: 'Terminal showing git init command',
-    diagramHint: 'terminal command'
+    diagramHint: 'terminal command',
+    diagramWidth: 600,
+    diagramHeight: 200,
   },
   {
     id: 'add-files',
@@ -54,7 +57,9 @@ const initialSteps: StepContent[] = [
     Icon: Github,
     diagramUrl: 'https://placehold.co/600x350.png',
     diagramAlt: 'GitHub new repository page',
-    diagramHint: 'github interface'
+    diagramHint: 'github interface',
+    diagramWidth: 600,
+    diagramHeight: 350,
   },
   {
     id: 'link-remote',
@@ -96,7 +101,9 @@ const initialSteps: StepContent[] = [
     Icon: Settings,
     diagramUrl: 'https://placehold.co/600x300.png',
     diagramAlt: 'Vercel import project screen',
-    diagramHint: 'vercel dashboard'
+    diagramHint: 'vercel dashboard',
+    diagramWidth: 600,
+    diagramHeight: 300,
   },
   {
     id: 'vercel-deploy',

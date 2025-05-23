@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from 'next/image';
@@ -15,6 +16,8 @@ export interface StepContent {
   diagramUrl?: string;
   diagramAlt?: string;
   diagramHint?: string;
+  diagramWidth?: number;
+  diagramHeight?: number;
   commands?: string[];
   Icon?: LucideIcon;
 }
@@ -63,13 +66,13 @@ export function WalkthroughStep({ step, isCompleted, onToggleComplete, stepNumbe
               <p key={index} className="text-muted-foreground leading-relaxed">{instr}</p>
             ))}
 
-            {step.diagramUrl && (
+            {step.diagramUrl && step.diagramWidth && step.diagramHeight && (
               <div className="my-4 p-4 border rounded-lg bg-secondary/30 flex justify-center items-center">
                 <Image
                   src={step.diagramUrl}
                   alt={step.diagramAlt || `Diagram for ${step.title}`}
-                  width={600}
-                  height={300}
+                  width={step.diagramWidth}
+                  height={step.diagramHeight}
                   className="rounded-md object-contain max-h-[300px]"
                   data-ai-hint={step.diagramHint || "process diagram"}
                 />
