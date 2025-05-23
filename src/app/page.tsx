@@ -1,8 +1,8 @@
+
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { WalkthroughGuide } from '@/components/repo-flow/WalkthroughGuide';
 import { EmbeddedTerminal } from '@/components/repo-flow/EmbeddedTerminal';
-import { AITroubleshooter } from '@/components/repo-flow/AITroubleshooter';
 import { MouseGlowEffect } from '@/components/mouse-glow-effect';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -30,7 +30,6 @@ export default function HomePage() {
 
             <div className="space-y-8">
               <EmbeddedTerminal />
-              <AITroubleshooter />
             </div>
           </div>
 
@@ -38,21 +37,13 @@ export default function HomePage() {
 
           <section className="mb-12 md:mb-16">
              <h3 className="text-3xl font-bold text-center text-foreground mb-8">Why RepoFlow?</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card className="shadow-lg hover:shadow-primary/20 transition-shadow duration-300">
                 <CardHeader>
                   <CardTitle className="text-xl">Guided Steps</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <CardDescription>Clear, concise instructions for each stage of the Git & Vercel process.</CardDescription>
-                </CardContent>
-              </Card>
-              <Card className="shadow-lg hover:shadow-primary/20 transition-shadow duration-300">
-                <CardHeader>
-                  <CardTitle className="text-xl">AI Assistance</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription>Smart troubleshooter to diagnose and fix common deployment issues.</CardDescription>
                 </CardContent>
               </Card>
               <Card className="shadow-lg hover:shadow-primary/20 transition-shadow duration-300">
