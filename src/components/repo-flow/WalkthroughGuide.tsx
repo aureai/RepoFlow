@@ -44,7 +44,7 @@ const initialSteps: StepContent[] = [
     id: 'create-github-repo',
     title: 'Create GitHub Repository',
     instructions: [
-      "Go to GitHub (github.com) and log in.",
+      "Go to GitHub and log in.",
       "Click the `+` icon in the top right corner and select 'New repository'.",
       "Give your repository a name (e.g., `my-awesome-app`). You can add an optional description.",
       "Choose public or private. For deploying to Vercel, public or private works.",
@@ -69,7 +69,7 @@ const initialSteps: StepContent[] = [
       {
         type: 'info',
         title: 'Placeholder Alert',
-        message: "Remember to replace `<your-repo-url>` with the actual URL from your GitHub repository page. This URL links your local project to its home on GitHub."
+        message: "Remember to replace `<your-repo-url>` with the actual URL from your GitHub repository page."
       }
     ],
     commands: ['git remote add origin https://github.com/your-username/your-repo-name.git'],
@@ -96,7 +96,7 @@ const initialSteps: StepContent[] = [
     id: 'vercel-signup',
     title: 'Sign Up/Log In to Vercel',
     instructions: [
-      "Go to Vercel (vercel.com).",
+      "Go to Vercel.",
       "Sign up for a new account or log in. It's often easiest to sign up/log in using your GitHub account for seamless integration."
     ],
     Icon: Cloud,
@@ -123,7 +123,7 @@ const initialSteps: StepContent[] = [
        {
         type: 'info',
         title: 'Deployment Process',
-        message: "Vercel will build your application and then assign it a unique URL. You can monitor the build logs in real-time. Once deployed, you'll get a live link to your project!"
+        message: "After Vercel finishes building, it will assign your project a unique URL. You can monitor the build logs in real-time. Once deployed, you'll get a live link!"
       }
     ],
     Icon: Rocket,
