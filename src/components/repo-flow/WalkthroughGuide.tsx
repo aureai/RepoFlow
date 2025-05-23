@@ -25,16 +25,6 @@ const initialSteps: StepContent[] = [
       </ul>,
       "Usually, you can find these by going to the 'View' menu at the top of your editor. From there, select 'Terminal' (or 'New Terminal'), and then 'Source Control' (it might also be called 'Git' or show a branch icon).",
       "(Handy shortcuts are often `Ctrl+\`` (backtick) for Terminal and `Ctrl+Shift+G` for Source Control on Windows/Linux, or `Cmd+\`` and `Cmd+Shift+G` on a Mac).",
-      <div key="editor-image" className="my-4 rounded-md overflow-hidden border border-border shadow-md max-w-full mx-auto">
-        <Image
-          src="https://placehold.co/600x350.png"
-          alt="Code editor view menu showing Terminal and Source Control options"
-          width={600}
-          height={350}
-          className="w-full h-auto object-contain max-h-[300px] md:max-h-[350px]"
-          data-ai-hint="code editor view menu"
-        />
-      </div>
     ],
   },
   {
@@ -172,22 +162,7 @@ export function WalkthroughGuide() {
 
   return (
     <div className="flex flex-col items-center w-full">
-      <Card className="w-full shadow-xl mb-6 bg-card/50 backdrop-blur-sm">
-        <CardHeader>
-          <CardTitle className="text-2xl flex items-center justify-center gap-2">
-            <GitBranch className="h-7 w-7 text-primary" />
-            Your Friendly Deployment Walkthrough
-          </CardTitle>
-          <div className="flex justify-between items-center pt-2">
-            <Badge variant="outline" className="text-sm">Step {currentStepIndex + 1} of {totalSteps}</Badge>
-            <div className="w-1/2">
-              <Progress value={progress} className="h-3" />
-              <p className="text-xs text-muted-foreground mt-1 text-right">{Math.round(progress)}% Steps Completed</p>
-            </div>
-          </div>
-        </CardHeader>
-      </Card>
-
+      {/* Header Card with progress has been removed */}
       <div className="w-full min-h-[600px] md:min-h-[700px] flex items-center justify-center relative overflow-hidden mb-8">
         <div key={currentStepIndex} className={`w-full max-w-3xl ${animationClass}`}>
           <WalkthroughStep
@@ -213,3 +188,4 @@ export function WalkthroughGuide() {
     </div>
   );
 }
+
